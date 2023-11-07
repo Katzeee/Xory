@@ -1,5 +1,3 @@
-use std::intrinsics::mir::Discriminant;
-
 use sea_orm_migration::prelude::*;
 
 #[derive(DeriveMigrationName)]
@@ -50,6 +48,13 @@ enum Diary {
     DateCreate,
     DateModify,
     Uid,
+}
+
+#[derive(DeriveIden)]
+enum WeatherCategory {
+    Enum,
+    Sunny,
+    Cloudy,
 }
 
 #[async_trait::async_trait]
@@ -191,8 +196,12 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Diary::Content).string().null())
                     .col(ColumnDef::new(Diary::Temperature).tiny_integer().null())
                     .col(
-                        ColumnDef::new(Diary::Weather), // .enumeration(, vec!["sunny", "cloudy"])
-                                                        // .default("sunny"),
+                        ColumnDef::new(Diary::Weather)
+                            .enumeration(
+                                WeatherCategory::Enum,
+                                [WeatherCategory::Sunny, WeatherCategory::Cloudy],
+                            )
+                            .default(WeatherCategory::Sunny.to_string()),
                     )
                     .col(ColumnDef::new(Diary::Category).integer().not_null())
                     .col(ColumnDef::new(Diary::DateCreate).date_time().not_null())
@@ -210,8 +219,9 @@ impl MigrationTrait for Migration {
                     )
                     .foreign_key(
                         ForeignKeyCreateStatement::new()
-                            .from(User::Table, User::Uid)
-                            .to_col(Diary::Uid)
+                            .name("uid")
+                            .from_col(Diary::Uid)
+                            .to(User::Table, User::Uid)
                             .on_delete(ForeignKeyAction::Restrict)
                             .on_update(ForeignKeyAction::Restrict),
                     )
