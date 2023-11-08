@@ -1,14 +1,16 @@
-use axum::{routing::get, Router};
+use axum::Router;
+use std::env;
+
+mod routes;
 
 #[tokio::main]
 pub async fn run() {
+    let port = env::var("PORT").expect("PORT not set in .env.");
     // build our application with a single route
-    let app = Router::new()
-        .route("/", get(|| async { "Hello, World!" }))
-        .route("/test", get(|| async { "test" }));
+    let app = Router::new().nest("/", routes::compose());
 
     // run it with hyper on localhost:3000
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+    axum::Server::bind(&format!("0.0.0.0:{port}").parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();

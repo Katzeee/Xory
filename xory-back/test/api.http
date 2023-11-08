@@ -1,5 +1,5 @@
-GET http://127.0.0.1:3000 HTTP/1.1
+GET http://127.0.0.1:3000/user/add HTTP/1.1
 
 ###
 
-GET http://127.0.0.1:3000/test HTTP/1.1
+GET http://127.0.0.1:3000/diary/list HTTP/1.1
