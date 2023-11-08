@@ -225,6 +225,20 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::Restrict)
                             .on_update(ForeignKeyAction::Restrict),
                     )
+                    .foreign_key(
+                        ForeignKeyCreateStatement::new()
+                            .name("category")
+                            .from_col(Diary::Category)
+                            .to(DiaryCategory::Table, DiaryCategory::Id)
+                            .on_delete(ForeignKeyAction::Restrict)
+                            .on_update(ForeignKeyAction::Restrict),
+                    )
+                    .index(
+                        IndexCreateStatement::new()
+                            .name("category_index")
+                            .col(Diary::Category)
+                            .index_type(IndexType::BTree),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -235,6 +249,9 @@ impl MigrationTrait for Migration {
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         // Replace the sample below with your own migration scripts
 
+        manager
+            .drop_table(Table::drop().table(Diary::Table).to_owned())
+            .await?;
         manager
             .drop_table(Table::drop().table(User::Table).to_owned())
             .await?;
