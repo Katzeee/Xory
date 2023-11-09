@@ -1,12 +1,10 @@
-use axum::{
-    routing::{get, MethodRouter},
-    Router,
-};
+use axum::{routing::get, Router};
+use crate::{StateMethodRouter, StateRoute};
 
-pub fn routes() -> Router {
+pub fn routes() -> StateRoute {
     Router::new().route("/list", list())
 }
 
-pub fn list() -> MethodRouter {
+pub fn list() -> StateMethodRouter {
     get(|| async { "Diary list" })
 }
