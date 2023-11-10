@@ -1,5 +1,6 @@
 ### Add user
 POST http://127.0.0.1:3000/user/add HTTP/1.1
+Authorization: hi
 content-type: application/json
 
 {
@@ -19,8 +20,10 @@ GET http://127.0.0.1:3000/diary/list HTTP/1.1
 
 ###
 
-POST http://127.0.0.1:3000/user/register HTTP/1.1
+POST http://127.0.0.1:3000/user/detail HTTP/1.1
 content-type: application/json
+
+###
 
 {
     "uid": 123,

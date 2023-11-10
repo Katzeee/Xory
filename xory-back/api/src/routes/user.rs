@@ -1,20 +1,23 @@
 use crate::{AppState, StateRoute};
 use axum::{
     extract::{Json, Query, State},
+    http::{header, HeaderMap, HeaderValue},
     response::IntoResponse,
     routing::{get, post},
     Router,
 };
 use axum_extra::extract::WithRejection;
-use common::{entity::user, error::ReqErr, response};
-use core::user::{register_user, UserRegisterRequest};
-use sea_orm::DbErr;
+use common::response;
+use core::{
+    user::{register_user, UserRegisterRequest},
+    utility::verify_token,
+};
 use serde::{Deserialize, Serialize};
 
 pub fn routes() -> StateRoute {
     Router::new()
         .route("/add", post(add))
-        .route("/register", post(register))
+        .route("/detail", post(detail))
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -26,8 +29,6 @@ pub async fn add(
     state: State<AppState>,
     req: WithRejection<Json<UserRegisterRequest>, response::Res<()>>,
 ) -> impl IntoResponse {
-    // let data = format!("{}", param.a);
-    // response::Res::success(data)
     let res = register_user(&state.db, req.0 .0).await;
     match res {
         Ok(user) => response::Res::success(user),
@@ -35,8 +36,16 @@ pub async fn add(
     }
 }
 
-pub async fn register(
-    param: WithRejection<Json<user::Model>, response::Res<()>>,
+pub async fn detail(
+    state: State<AppState>,
+    header: HeaderMap, // param: WithRejection<Json<user::Model>, response::Res<()>>,
 ) -> impl IntoResponse {
-    response::Res::success(param.0 .0)
+    let token: String = header
+        .get(header::AUTHORIZATION)
+        .unwrap()
+        .to_str()
+        .unwrap_or("")
+        .into();
+    verify_token(token);
+    response::Res::success("1")
 }
