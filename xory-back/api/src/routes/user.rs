@@ -8,7 +8,7 @@ use axum::{
     Router,
 };
 use axum_extra::extract::WithRejection;
-use common::response;
+use common::response::CommonRes;
 use core::user::{UserLoginReq, UserRegisterReq};
 use middleware_fn::auth::verify_token;
 
@@ -22,23 +22,23 @@ pub fn routes() -> StateRoute {
 
 pub async fn add(
     state: State<AppState>,
-    WithRejection(Json(req), _): WithRejection<Json<UserRegisterReq>, response::Res<()>>,
+    WithRejection(Json(req), _): WithRejection<Json<UserRegisterReq>, CommonRes<()>>,
 ) -> impl IntoResponse {
     let res = core::user::add(&state.db, req).await;
     match res {
-        Ok(user) => response::Res::success(user),
-        Err(err) => response::Res::error(err),
+        Ok(user) => CommonRes::success(user),
+        Err(err) => CommonRes::error(err),
     }
 }
 
 pub async fn login(
     state: State<AppState>,
-    WithRejection(Query(req), _): WithRejection<Query<UserLoginReq>, response::Res<()>>,
+    WithRejection(Query(req), _): WithRejection<Query<UserLoginReq>, CommonRes<()>>,
 ) -> impl IntoResponse {
     let res = core::user::login(&state.db, req).await;
     match res {
-        Ok(token) => response::Res::success(token),
-        Err(err) => response::Res::error(err),
+        Ok(token) => CommonRes::success(token),
+        Err(err) => CommonRes::error(err),
     }
 }
 
@@ -49,5 +49,5 @@ pub async fn detail(
     let token = header.get(header::AUTHORIZATION);
 
     // verify_token(token);
-    response::Res::success("1")
+    CommonRes::success("1")
 }

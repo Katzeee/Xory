@@ -10,13 +10,13 @@ use serde_json::json;
 use crate::error::ReqErr;
 
 #[derive(Debug, Serialize)]
-pub struct Res<T> {
+pub struct CommonRes<T> {
     code: i32,
     data: Option<T>,
     message: String,
 }
 
-impl<T> Res<T> {
+impl<T> CommonRes<T> {
     pub fn success(data: T) -> Self {
         Self {
             code: 200,
@@ -48,7 +48,7 @@ impl<T> Res<T> {
     }
 }
 
-impl<T> IntoResponse for Res<T>
+impl<T> IntoResponse for CommonRes<T>
 where
     T: Serialize,
 {
@@ -58,7 +58,7 @@ where
     }
 }
 
-impl From<JsonRejection> for Res<()> {
+impl From<JsonRejection> for CommonRes<()> {
     fn from(value: JsonRejection) -> Self {
         Self {
             code: value.status().as_u16().into(),
@@ -68,7 +68,7 @@ impl From<JsonRejection> for Res<()> {
     }
 }
 
-impl From<QueryRejection> for Res<()> {
+impl From<QueryRejection> for CommonRes<()> {
     fn from(value: QueryRejection) -> Self {
         Self {
             code: value.status().as_u16().into(),
