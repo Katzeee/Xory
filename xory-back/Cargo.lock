@@ -126,12 +126,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.75"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a4668cab20f66d8d020e1fbc0ebe47217433c1b6c8f2040faf858554e394ace6"
+
+[[package]]
 name = "api"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "axum",
  "common",
+ "core",
  "sea-orm",
+ "thiserror",
  "tokio",
 ]
 
@@ -610,8 +619,12 @@ checksum = "acbf1af155f9b9ef647e42cdc158db4b64a1b61f743629225fde6f3e0be2a7c7"
 name = "common"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
+ "axum",
  "sea-orm",
  "serde",
+ "serde_json",
+ "thiserror",
 ]
 
 [[package]]
@@ -632,6 +645,11 @@ checksum = "28c122c3980598d243d63d9a704629a2d748d101f278052ff068be5a4423ab6f"
 [[package]]
 name = "core"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "common",
+ "sea-orm",
+]
 
 [[package]]
 name = "core-foundation"
@@ -3192,6 +3210,8 @@ dependencies = [
  "common",
  "core",
  "dotenvy",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

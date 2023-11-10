@@ -10,3 +10,6 @@ axum = { workspace = true }
 tokio = { workspace = true }
 sea-orm = { workspace = true }
 common = { path = "../common" }
+core = { path = "../core" }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
