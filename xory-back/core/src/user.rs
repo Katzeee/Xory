@@ -7,7 +7,7 @@ use sea_orm::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct UserRegisterReq {
+pub struct UserAddReq {
     pub email: String,
     pub username: String,
     pub password: String,
@@ -44,7 +44,7 @@ pub async fn login(db: &DatabaseConnection, user_login_request: UserLoginReq) ->
 
 pub async fn add(
     db: &DatabaseConnection,
-    user_register_request: UserRegisterReq,
+    user_register_request: UserAddReq,
 ) -> Result<user::Model> {
     let user = user::ActiveModel {
         email: Set(user_register_request.email),

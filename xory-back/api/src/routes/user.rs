@@ -9,7 +9,7 @@ use axum::{
 };
 use axum_extra::extract::WithRejection;
 use common::response::CommonRes;
-use core::user::{UserLoginReq, UserRegisterReq};
+use core::user::{UserLoginReq, UserAddReq};
 use middleware_fn::auth::verify_token;
 
 pub fn routes() -> StateRoute {
@@ -22,7 +22,7 @@ pub fn routes() -> StateRoute {
 
 pub async fn add(
     state: State<AppState>,
-    WithRejection(Json(req), _): WithRejection<Json<UserRegisterReq>, CommonRes<()>>,
+    WithRejection(Json(req), _): WithRejection<Json<UserAddReq>, CommonRes<()>>,
 ) -> impl IntoResponse {
     let res = core::user::add(&state.db, req).await;
     match res {
