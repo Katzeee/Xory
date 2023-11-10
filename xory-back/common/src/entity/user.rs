@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[sea_orm(table_name = "user")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub uid: i32,
+    pub uid: u32,
     #[sea_orm(unique)]
     pub email: String,
     pub username: String,

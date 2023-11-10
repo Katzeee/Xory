@@ -17,7 +17,7 @@ pub struct Model {
     pub category: i32,
     pub date_create: DateTime,
     pub date_modify: DateTime,
-    pub uid: i32,
+    pub uid: u32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

@@ -95,7 +95,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(User::Uid)
-                            .integer()
+                            .unsigned()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
@@ -216,7 +216,7 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(ColumnDef::new(Diary::Uid).integer().not_null())
+                    .col(ColumnDef::new(Diary::Uid).unsigned().not_null())
                     .primary_key(
                         IndexCreateStatement::new()
                             .col(Diary::Id)
