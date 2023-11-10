@@ -157,7 +157,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(DiaryCategory::Id)
-                            .integer()
+                            .unsigned()
                             .not_null()
                             .auto_increment(),
                     )
@@ -210,7 +210,7 @@ impl MigrationTrait for Migration {
                             )
                             .default(WeatherCategory::Sunny.to_string()),
                     )
-                    .col(ColumnDef::new(Diary::Category).integer().not_null())
+                    .col(ColumnDef::new(Diary::Category).unsigned().not_null())
                     .col(ColumnDef::new(Diary::DateCreate).date_time().not_null())
                     .col(
                         ColumnDef::new(Diary::DateModify)

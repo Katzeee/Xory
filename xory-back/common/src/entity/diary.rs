@@ -14,7 +14,7 @@ pub struct Model {
     pub content: Option<String>,
     pub temperature: Option<i8>,
     pub weather: Option<Weather>,
-    pub category: i32,
+    pub category: u32,
     pub date_create: DateTime,
     pub date_modify: DateTime,
     pub uid: u32,
