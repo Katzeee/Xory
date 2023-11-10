@@ -14,7 +14,7 @@ pub struct UserAddReq {
     pub comment: Option<String>,
     pub wechat: Option<String>,
     pub phone_number: Option<String>,
-    pub group_id: i32,
+    pub group_id: u32,
     pub avatar: Option<String>,
 }
 

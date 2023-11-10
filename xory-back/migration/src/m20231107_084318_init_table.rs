@@ -48,6 +48,8 @@ enum Diary {
     DateCreate,
     DateModify,
     Uid,
+    Longitude,
+    Latitude,
 }
 
 #[derive(DeriveIden)]
@@ -67,7 +69,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(UserGroup::Id)
-                            .integer()
+                            .unsigned()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
@@ -125,7 +127,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(User::PhoneNumber).string_len(20).null())
                     .col(
                         ColumnDef::new(User::GroupId)
-                            .integer()
+                            .unsigned()
                             .not_null()
                             .default(2i32),
                     )
@@ -192,7 +194,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(Diary::Id)
-                            .integer()
+                            .big_unsigned()
                             .not_null()
                             .auto_increment(),
                     )
@@ -217,6 +219,8 @@ impl MigrationTrait for Migration {
                             .default(Expr::current_timestamp()),
                     )
                     .col(ColumnDef::new(Diary::Uid).unsigned().not_null())
+                    .col(ColumnDef::new(Diary::Longitude).float().null())
+                    .col(ColumnDef::new(Diary::Latitude).float().null())
                     .primary_key(
                         IndexCreateStatement::new()
                             .col(Diary::Id)
