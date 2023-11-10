@@ -12,6 +12,7 @@ tokio = { workspace = true }
 sea-orm = { workspace = true }
 common = { path = "../common" }
 core = { path = "../core" }
+middleware_fn = { path = "../middleware_fn" }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }

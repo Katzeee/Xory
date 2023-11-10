@@ -4,7 +4,7 @@ use sea_orm::{ActiveModelTrait, ActiveValue::Set, DatabaseConnection};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct UserRegisterRequest {
+pub struct UserRegisterReq {
     pub email: String,
     pub username: String,
     pub password: String,
@@ -15,9 +15,14 @@ pub struct UserRegisterRequest {
     pub avatar: Option<String>,
 }
 
+pub struct UserLoginReq {
+    pub email: String,
+    pub password: String,
+}
+
 pub async fn register_user(
     db: &DatabaseConnection,
-    user_register_request: UserRegisterRequest,
+    user_register_request: UserRegisterReq,
 ) -> Result<user::Model> {
     let user = user::ActiveModel {
         email: Set(user_register_request.email),
