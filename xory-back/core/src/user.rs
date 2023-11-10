@@ -42,7 +42,7 @@ pub async fn login(db: &DatabaseConnection, user_login_request: UserLoginReq) ->
     }
 }
 
-pub async fn register_user(
+pub async fn add(
     db: &DatabaseConnection,
     user_register_request: UserRegisterReq,
 ) -> Result<user::Model> {
