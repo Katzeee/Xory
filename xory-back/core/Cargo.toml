@@ -9,3 +9,6 @@ edition = "2021"
 common = { path = "../common" }
 sea-orm = { workspace = true }
 anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

@@ -7,7 +7,7 @@ mod routes;
 #[tokio::main]
 pub async fn run() {
     let port = env::var("PORT").expect("PORT not set in .env.");
-    let state = State {
+    let state = AppState {
         db: db_conn::get_db_conn().await,
     };
 
@@ -21,9 +21,9 @@ pub async fn run() {
 }
 
 #[derive(Debug, Clone)]
-pub struct State {
+pub struct AppState {
     db: DatabaseConnection,
 }
 
-type StateRoute = Router<State>;
-type StateMethodRouter = MethodRouter<State>;
+type StateRoute = Router<AppState>;
+type StateMethodRouter = MethodRouter<AppState>;
