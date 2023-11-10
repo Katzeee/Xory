@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 axum = { workspace = true }
 common = { path = "../common" }
+middleware_fn ={ path = "../middleware_fn"}
 sea-orm = { workspace = true }
 anyhow = { workspace = true }
 serde = { workspace = true }

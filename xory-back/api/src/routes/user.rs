@@ -9,7 +9,7 @@ use axum::{
 };
 use axum_extra::extract::WithRejection;
 use common::response;
-use core::user::{register_user, UserRegisterReq};
+use core::user::{register_user, UserLoginReq, UserRegisterReq};
 use middleware_fn::auth::verify_token;
 use serde::{Deserialize, Serialize};
 
@@ -17,7 +17,8 @@ pub fn routes() -> StateRoute {
     Router::new()
         .route("/detail", post(detail))
         .route("/add", post(add))
-        .layer(middleware::from_fn(verify_token))
+        .route("/login", get(login))
+    // .layer(middleware::from_fn(verify_token))
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -27,9 +28,9 @@ pub struct A {
 
 pub async fn add(
     state: State<AppState>,
-    req: WithRejection<Json<UserRegisterReq>, response::Res<()>>,
+    WithRejection(Json(req), _): WithRejection<Json<UserRegisterReq>, response::Res<()>>,
 ) -> impl IntoResponse {
-    let res = register_user(&state.db, req.0 .0).await;
+    let res = register_user(&state.db, req).await;
     match res {
         Ok(user) => response::Res::success(user),
         Err(err) => response::Res::error(err),
@@ -38,8 +39,13 @@ pub async fn add(
 
 pub async fn login(
     state: State<AppState>,
-    req: WithRejection<Json<UserRegisterReq>, response::Res<()>>,
+    WithRejection(Query(req), _): WithRejection<Query<UserLoginReq>, response::Res<()>>,
 ) -> impl IntoResponse {
+    let res = core::user::login(&state.db, req).await;
+    match res {
+        Ok(token) => response::Res::success(token),
+        Err(err) => response::Res::error(err),
+    }
 }
 
 pub async fn detail(

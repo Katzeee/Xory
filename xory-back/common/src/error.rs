@@ -6,4 +6,6 @@ pub enum ReqErr {
     ReqParamError(String),
     #[error("Not authorized.")]
     NotAuthorizedError,
+    #[error("Login failed.")]
+    LoginError,
 }

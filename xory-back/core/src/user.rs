@@ -1,6 +1,9 @@
 use anyhow::Result;
-use common::entity::user;
-use sea_orm::{ActiveModelTrait, ActiveValue::Set, DatabaseConnection};
+use common::{entity::user, error::ReqErr};
+use middleware_fn::auth::{create_token, Claims};
+use sea_orm::{
+    ActiveModelTrait, ActiveValue::Set, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -15,9 +18,28 @@ pub struct UserRegisterReq {
     pub avatar: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UserLoginReq {
     pub email: String,
     pub password: String,
+}
+
+pub async fn login(db: &DatabaseConnection, user_login_request: UserLoginReq) -> Result<String> {
+    let user = user::Entity::find()
+        .filter(user::Column::Email.eq(&user_login_request.email))
+        .one(db)
+        .await?;
+    match user {
+        Some(user) => {
+            let claims = Claims {
+                id: user.uid,
+                email: user.email,
+                ..Default::default()
+            };
+            Ok(create_token(claims).await)
+        }
+        None => Err(ReqErr::LoginError.into()),
+    }
 }
 
 pub async fn register_user(

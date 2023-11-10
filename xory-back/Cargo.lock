@@ -683,6 +683,7 @@ dependencies = [
  "axum",
  "common",
  "jsonwebtoken",
+ "middleware_fn",
  "sea-orm",
  "serde",
  "serde_json",

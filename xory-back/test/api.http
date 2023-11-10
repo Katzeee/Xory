@@ -14,9 +14,9 @@ content-type: application/json
     "avatar": null
 }
 
-###
+### Login
 
-GET http://127.0.0.1:3000/diary/list HTTP/1.1
+GET http://127.0.0.1:3000/user/login?email=326578901@qq.com&password=3313 HTTP/1.1
 
 ###
 

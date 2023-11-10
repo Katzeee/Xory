@@ -30,11 +30,11 @@ impl Keys {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Claims {
-    id: u32,
-    username: String,
-    expire: Option<DateTime<Utc>>,
+    pub id: u32,
+    pub email: String,
+    pub expire: Option<DateTime<Utc>>,
 }
 
 pub async fn create_token(mut claims: Claims) -> String {
