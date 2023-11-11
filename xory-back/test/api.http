@@ -25,13 +25,18 @@ content-type: application/json
 
 ###
 
+POST http://127.0.0.1:3000/diary/add HTTP/1.1
+Authorization: hi
+content-type: application/json
+
 {
-    "uid": 123,
-    "email": "1",
-    "username": "123",
-    "password": "123",
-    "register_time": "2022-01-15T13:45:30Z",
-    "last_visit_time": "2022-01-15T13:45:30Z",
-    "group_id": 2,
-    "diary_count": 0
+    "date": "2022-06-13T15:45:30",
+    "title": "Test diary",
+    "content": "Test content",
+    "temperature": null,
+    "weather": null,
+    "category": 1,
+    "uid": 1,
+    "longtitude": null,
+    "latitude": null
 }
