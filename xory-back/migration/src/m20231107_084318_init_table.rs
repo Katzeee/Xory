@@ -61,6 +61,7 @@ enum WeatherCategory {
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
+    // Set default for those data not get from front end
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .create_table(
@@ -211,7 +212,12 @@ impl MigrationTrait for Migration {
                             .default(WeatherCategory::Sunny.to_string()),
                     )
                     .col(ColumnDef::new(Diary::Category).unsigned().not_null())
-                    .col(ColumnDef::new(Diary::DateCreate).date_time().not_null())
+                    .col(
+                        ColumnDef::new(Diary::DateCreate)
+                            .date_time()
+                            .default(Expr::current_timestamp())
+                            .not_null(),
+                    )
                     .col(
                         ColumnDef::new(Diary::DateModify)
                             .date_time()
