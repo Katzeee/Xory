@@ -10,6 +10,8 @@ pub async fn get_db_conn() -> DatabaseConnection {
         .acquire_timeout(Duration::from_secs(8))
         .idle_timeout(Duration::from_secs(8))
         .max_lifetime(Duration::from_secs(8))
+        // .sqlx_logging(true)
+        // .sqlx_logging_level(log::LevelFilter::Debug)
         .to_owned();
 
     let db: DatabaseConnection = Database::connect(opt)

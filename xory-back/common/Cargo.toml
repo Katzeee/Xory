@@ -12,3 +12,5 @@ serde_json = { workspace = true }
 axum = { workspace = true }
 thiserror = { workspace = true }
 anyhow = { workspace = true }
+log ={ workspace = true }
+tracing ={ workspace = true }

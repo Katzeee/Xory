@@ -23,7 +23,7 @@ GET http://127.0.0.1:3000/user/login?email=326578901@qq.com&password=3313 HTTP/1
 POST http://127.0.0.1:3000/user/detail HTTP/1.1
 content-type: application/json
 
-###
+### Add diary
 
 POST http://127.0.0.1:3000/diary/add HTTP/1.1
 Authorization: hi
@@ -40,3 +40,8 @@ content-type: application/json
     "longtitude": null,
     "latitude": null
 }
+
+### List diaries
+
+GET http://127.0.0.1:3000/diary/list?page_number=1&page_size=10&keywords=["Test"]&category=[] HTTP/1.1
+Authorization: hi
