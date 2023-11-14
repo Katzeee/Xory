@@ -42,6 +42,7 @@ pub async fn add(db: &DatabaseConnection, diary_add_request: DiaryAddReq) -> Res
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DiaryListReq {
+    pub uid: u32,
     pub page_number: u32,
     pub page_size: u32,
     pub keywords: String,
@@ -59,8 +60,8 @@ pub async fn list(
     db: &DatabaseConnection,
     diary_list_request: DiaryListReq,
 ) -> Result<Vec<DiaryListRes>> {
+    let mut diaries = diary::Entity::find().filter(diary::Column::Uid.eq(diary_list_request.uid));
     let keywords: Vec<String> = serde_json::from_str(&diary_list_request.keywords)?;
-    println!("{:?}", keywords);
     let keyword_expr = keywords
         .into_iter()
         .map(|keyword| {
@@ -72,8 +73,6 @@ pub async fn list(
             Some(expr) => Some(expr.and(cur)),
             None => Some(cur),
         });
-
-    let mut diaries = diary::Entity::find();
     if let Some(keyword_expr) = keyword_expr {
         diaries = diaries.filter(keyword_expr);
     }
@@ -88,11 +87,7 @@ pub async fn list(
     if let Some(category_expr) = category_expr {
         diaries = diaries.filter(category_expr);
     }
-
-    // println!("{}", diaries.debug_print());
-
     let diaries = diaries.all(db).await?;
-
     let diaries = diaries
         .into_iter()
         .map(|diary| DiaryListRes {
@@ -101,6 +96,5 @@ pub async fn list(
             category: diary.category,
         })
         .collect();
-
     Ok(diaries)
 }

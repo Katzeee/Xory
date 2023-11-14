@@ -43,5 +43,5 @@ content-type: application/json
 
 ### List diaries
 
-GET http://127.0.0.1:3000/diary/list?page_number=1&page_size=10&keywords=[]&category=[] HTTP/1.1
+GET http://127.0.0.1:3000/diary/list?uid=1&page_number=1&page_size=10&keywords=[]&category=[] HTTP/1.1
 Authorization: hi
