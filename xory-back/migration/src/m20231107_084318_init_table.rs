@@ -226,8 +226,8 @@ impl MigrationTrait for Migration {
                             .default(Expr::current_timestamp()),
                     )
                     .col(ColumnDef::new(Diary::Uid).unsigned().not_null())
-                    .col(ColumnDef::new(Diary::Longitude).float().null())
-                    .col(ColumnDef::new(Diary::Latitude).float().null())
+                    .col(ColumnDef::new(Diary::Longitude).decimal_len(9, 6).null())
+                    .col(ColumnDef::new(Diary::Latitude).decimal_len(9, 6).null())
                     .primary_key(
                         IndexCreateStatement::new()
                             .col(Diary::Id)

@@ -4,7 +4,7 @@ use super::sea_orm_active_enums::Weather;
 use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
 #[sea_orm(table_name = "diary")]
 pub struct Model {
     #[sea_orm(primary_key)]
@@ -18,10 +18,10 @@ pub struct Model {
     pub date_create: DateTime,
     pub date_modify: DateTime,
     pub uid: u32,
-    #[sea_orm(column_type = "Float", nullable)]
-    pub longitude: Option<f32>,
-    #[sea_orm(column_type = "Float", nullable)]
-    pub latitude: Option<f32>,
+    #[sea_orm(column_type = "Decimal(Some((9, 6)))", nullable)]
+    pub longitude: Option<Decimal>,
+    #[sea_orm(column_type = "Decimal(Some((9, 6)))", nullable)]
+    pub latitude: Option<Decimal>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
