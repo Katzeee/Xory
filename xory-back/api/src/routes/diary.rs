@@ -7,12 +7,24 @@ use axum::{
 };
 use axum_extra::extract::WithRejection;
 use common::response::CommonRes;
-use core::diary::{DiaryAddReq, DiaryListReq, DiaryListRes};
+use core::diary::{DiaryAddReq, DiaryDetailReq, DiaryListReq};
 
 pub fn routes() -> StateRoute {
     Router::new()
         .route("/list", get(list))
         .route("/add", post(add))
+        .route("/detail", get(detail))
+}
+
+pub async fn add(
+    state: State<AppState>,
+    WithRejection(Json(req), _): WithRejection<Json<DiaryAddReq>, CommonRes<()>>,
+) -> impl IntoResponse {
+    let res = core::diary::add(&state.db, req).await;
+    match res {
+        Ok(diary) => CommonRes::success(diary),
+        Err(err) => CommonRes::error(err),
+    }
 }
 
 pub async fn list(
@@ -26,13 +38,13 @@ pub async fn list(
     }
 }
 
-pub async fn add(
+pub async fn detail(
     state: State<AppState>,
-    WithRejection(Json(req), _): WithRejection<Json<DiaryAddReq>, CommonRes<()>>,
+    WithRejection(Query(req), _): WithRejection<Query<DiaryDetailReq>, CommonRes<()>>,
 ) -> impl IntoResponse {
-    let res = core::diary::add(&state.db, req).await;
+    let res = core::diary::detail(&state.db, req).await;
     match res {
-        Ok(diary) => CommonRes::success(diary),
+        Ok(diary_detail) => CommonRes::success(diary_detail),
         Err(err) => CommonRes::error(err),
     }
 }

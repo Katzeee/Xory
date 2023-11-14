@@ -1,5 +1,8 @@
 use anyhow::Result;
-use common::entity::{diary, sea_orm_active_enums::Weather};
+use common::{
+    entity::{diary, sea_orm_active_enums::Weather},
+    error::ReqErr,
+};
 use sea_orm::{
     entity::prelude::{DateTime, Decimal},
     sea_query::SimpleExpr,
@@ -51,6 +54,7 @@ pub struct DiaryListReq {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DiaryListRes {
+    pub id: u64,
     pub title: String,
     pub content: Option<String>,
     pub category: u32,
@@ -91,10 +95,42 @@ pub async fn list(
     let diaries = diaries
         .into_iter()
         .map(|diary| DiaryListRes {
+            id: diary.id,
             title: diary.title,
             content: diary.content,
             category: diary.category,
         })
         .collect();
     Ok(diaries)
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DiaryDetailReq {
+    pub id: u64,
+}
+
+// #[derive(Debug, Serialize, Deserialize)]
+// pub struct DiaryDetailRes {
+//     pub id: u64,
+//     pub date: DateTime,
+//     pub title: String,
+//     pub content: Option<String>,
+//     pub temperature: Option<i8>,
+//     pub weather: Option<Weather>,
+//     pub category: u32,
+//     pub date_create: DateTime,
+//     pub date_modify: DateTime,
+//     pub uid: u32,
+//     pub longitude: Option<Decimal>,
+//     pub latitude: Option<Decimal>,
+// }
+
+pub async fn detail(
+    db: &DatabaseConnection,
+    diary_detail_request: DiaryDetailReq,
+) -> Result<diary::Model> {
+    let diary = diary::Entity::find_by_id(diary_detail_request.id)
+        .one(db)
+        .await?;
+    diary.ok_or(ReqErr::NoResError.into())
 }

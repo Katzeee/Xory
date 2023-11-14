@@ -8,4 +8,6 @@ pub enum ReqErr {
     NotAuthorizedError,
     #[error("Login failed.")]
     LoginError,
+    #[error("Get no result.")]
+    NoResError,
 }
