@@ -48,5 +48,23 @@ Authorization: hi
 
 ### Detail diaries
 
-GET http://127.0.0.1:3000/diary/detail?id=101 HTTP/1.1
+GET http://127.0.0.1:3000/diary/detail?id=1 HTTP/1.1
 Authorization: hi
+
+### Modify diary
+
+POST http://127.0.0.1:3000/diary/modify HTTP/1.1
+Authorization: hi
+content-type: application/json
+
+{
+    "id": 1,
+    "date": "2022-06-13T15:45:30",
+    "title": "Test diary",
+    "content": "Test content",
+    "temperature": null,
+    "weather": null,
+    "category": 1,
+    "longtitude": null,
+    "latitude": null
+}

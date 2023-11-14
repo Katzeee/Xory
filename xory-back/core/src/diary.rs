@@ -1,4 +1,5 @@
 use anyhow::Result;
+use chrono::Utc;
 use common::{
     entity::{diary, sea_orm_active_enums::Weather},
     error::ReqErr,
@@ -36,7 +37,6 @@ pub async fn add(db: &DatabaseConnection, diary_add_request: DiaryAddReq) -> Res
         uid: Set(diary_add_request.uid),
         longitude: Set(diary_add_request.longtitude),
         latitude: Set(diary_add_request.latitude),
-
         ..Default::default()
     };
     let diary = diary.insert(db).await?;
@@ -109,22 +109,6 @@ pub struct DiaryDetailReq {
     pub id: u64,
 }
 
-// #[derive(Debug, Serialize, Deserialize)]
-// pub struct DiaryDetailRes {
-//     pub id: u64,
-//     pub date: DateTime,
-//     pub title: String,
-//     pub content: Option<String>,
-//     pub temperature: Option<i8>,
-//     pub weather: Option<Weather>,
-//     pub category: u32,
-//     pub date_create: DateTime,
-//     pub date_modify: DateTime,
-//     pub uid: u32,
-//     pub longitude: Option<Decimal>,
-//     pub latitude: Option<Decimal>,
-// }
-
 pub async fn detail(
     db: &DatabaseConnection,
     diary_detail_request: DiaryDetailReq,
@@ -133,4 +117,39 @@ pub async fn detail(
         .one(db)
         .await?;
     diary.ok_or(ReqErr::NoResError.into())
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DiaryModifyReq {
+    pub id: u64,
+    pub date: DateTime,
+    pub title: String,
+    pub content: Option<String>,
+    pub temperature: Option<i8>,
+    pub weather: Option<Weather>,
+    pub category: u32,
+    pub longitude: Option<Decimal>,
+    pub latitude: Option<Decimal>,
+}
+
+pub async fn modify(
+    db: &DatabaseConnection,
+    diary_modify_request: DiaryModifyReq,
+) -> Result<diary::Model> {
+    let mut diary: diary::ActiveModel = diary::Entity::find_by_id(diary_modify_request.id)
+        .one(db)
+        .await?
+        .unwrap()
+        .into();
+    diary.date = Set(diary_modify_request.date);
+    diary.title = Set(diary_modify_request.title);
+    diary.content = Set(diary_modify_request.content);
+    diary.temperature = Set(diary_modify_request.temperature);
+    diary.weather = Set(diary_modify_request.weather);
+    diary.category = Set(diary_modify_request.category);
+    diary.longitude = Set(diary_modify_request.longitude);
+    diary.latitude = Set(diary_modify_request.latitude);
+    diary.date_modify = Set(Utc::now().naive_utc());
+    let diary = diary.update(db).await?;
+    Ok(diary)
 }

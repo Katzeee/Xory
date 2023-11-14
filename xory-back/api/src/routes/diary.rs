@@ -7,13 +7,14 @@ use axum::{
 };
 use axum_extra::extract::WithRejection;
 use common::response::CommonRes;
-use core::diary::{DiaryAddReq, DiaryDetailReq, DiaryListReq};
+use core::diary::{DiaryAddReq, DiaryDetailReq, DiaryListReq, DiaryModifyReq};
 
 pub fn routes() -> StateRoute {
     Router::new()
         .route("/list", get(list))
         .route("/add", post(add))
         .route("/detail", get(detail))
+        .route("/modify", post(modify))
 }
 
 pub async fn add(
@@ -45,6 +46,17 @@ pub async fn detail(
     let res = core::diary::detail(&state.db, req).await;
     match res {
         Ok(diary_detail) => CommonRes::success(diary_detail),
+        Err(err) => CommonRes::error(err),
+    }
+}
+
+pub async fn modify(
+    state: State<AppState>,
+    WithRejection(Json(req), _): WithRejection<Json<DiaryModifyReq>, CommonRes<()>>,
+) -> impl IntoResponse {
+    let res = core::diary::modify(&state.db, req).await;
+    match res {
+        Ok(diary) => CommonRes::success(diary),
         Err(err) => CommonRes::error(err),
     }
 }
