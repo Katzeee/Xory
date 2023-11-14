@@ -1,9 +1,11 @@
 use anyhow::Result;
 use common::entity::{diary, sea_orm_active_enums::Weather};
-use sea_orm::entity::prelude::DateTime;
 use sea_orm::{
-    sea_query::SimpleExpr, ActiveModelTrait, ActiveValue::Set, ColumnTrait, DatabaseConnection,
-    EntityTrait, QueryFilter,
+    entity::prelude::{DateTime, Decimal},
+    sea_query::SimpleExpr,
+    ActiveModelTrait,
+    ActiveValue::Set,
+    ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter,
 };
 use serde::{Deserialize, Serialize};
 
@@ -16,8 +18,8 @@ pub struct DiaryAddReq {
     pub weather: Option<Weather>,
     pub category: u32,
     pub uid: u32,
-    pub longtitude: Option<f32>,
-    pub latitude: Option<f32>,
+    pub longtitude: Option<Decimal>,
+    pub latitude: Option<Decimal>,
 }
 
 pub async fn add(db: &DatabaseConnection, diary_add_request: DiaryAddReq) -> Result<diary::Model> {

@@ -22,15 +22,8 @@ pub async fn init_data(manager: &SchemaManager<'_>, migration_name: &str) -> Res
         let path = res?.path();
         let sql_vec = get_insert_sql_string(path.clone(), db_end).await?;
         for sql in sql_vec {
-            let stmt = Statement::from_string(db_end, sql).to_owned();
-            match db.execute(stmt).await {
-                Ok(_) => {
-                    println!("Successfully init data: {}", path.to_str().unwrap());
-                }
-                Err(e) => {
-                    println!("{}", e);
-                }
-            };
+            let stmt = Statement::from_string(db_end, &sql).to_owned();
+            db.execute(stmt).await.with_context(|| format!("{}", sql))?;
         }
     }
     println!("All mockdata insert succeed.");
