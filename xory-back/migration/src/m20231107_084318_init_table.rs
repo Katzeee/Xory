@@ -1,3 +1,4 @@
+use crate::db_utils::init_data;
 use sea_orm_migration::prelude::*;
 
 #[derive(DeriveMigrationName)]
@@ -130,13 +131,13 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(User::GroupId)
                             .unsigned()
                             .not_null()
-                            .default(2i32),
+                            .default(2u32),
                     )
                     .col(
                         ColumnDef::new(User::DiaryCount)
                             .integer()
                             .not_null()
-                            .default(0i32),
+                            .default(0u32),
                     )
                     .col(ColumnDef::new(User::Avatar).string().null())
                     .foreign_key(
@@ -258,7 +259,13 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        Ok(())
+        match init_data(manager, Migration.name()).await {
+            Ok(_) => Ok(()),
+            Err(err) => {
+                println!("{}", err);
+                Ok(())
+            }
+        }
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
