@@ -16,23 +16,26 @@ interface langInfo {
 
 export const langList: langInfo[] = [
   {
-    k: 'zh-CN',
-    v: '简体中文'
+    name: 'zh-CN',
+    displayName: '简体中文'
   },
   {
-    k: 'en-US',
-    v: 'English'
+    name: 'en-US',
+    displayName: 'English'
   }
 ]
 
 export type MessageSchema = typeof enUS | typeof zhCN
 
-const appStore = useAppStore()
-export const i18n = createI18n<MessageSchema>({
-  legacy: false,
-  globalInjection: true,
-  locale: appStore.app.lang || 'zhCN',
-  fallbackLocale: 'enUS',
-  silentTranslationWarn: true,
-  messages
-})
+export const i18n = () => {
+  const appStore = useAppStore()
+  const i18n = createI18n<MessageSchema>({
+    legacy: false,
+    globalInjection: true,
+    locale: appStore.app.lang || 'zh-CN',
+    fallbackLocale: 'en-US',
+    silentTranslationWarn: true,
+    messages
+  })
+  return i18n
+}
