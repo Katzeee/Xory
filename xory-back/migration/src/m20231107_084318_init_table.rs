@@ -19,6 +19,7 @@ enum User {
     Email,
     Username,
     Password,
+    Salt,
     RegisterTime,
     LastVisitTime,
     Comment,
@@ -112,6 +113,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(User::Username).string_len(50).not_null())
                     .col(ColumnDef::new(User::Password).string().not_null())
+                    .col(ColumnDef::new(User::Salt).string().not_null())
                     .col(
                         ColumnDef::new(User::RegisterTime)
                             .timestamp()
@@ -202,7 +204,7 @@ impl MigrationTrait for Migration {
                     )
                     .col(ColumnDef::new(Diary::Date).date_time().not_null())
                     .col(ColumnDef::new(Diary::Title).string().not_null())
-                    .col(ColumnDef::new(Diary::Content).string().null())
+                    .col(ColumnDef::new(Diary::Content).text().null())
                     .col(ColumnDef::new(Diary::Temperature).tiny_integer().null())
                     .col(
                         ColumnDef::new(Diary::Weather)
@@ -262,8 +264,8 @@ impl MigrationTrait for Migration {
         match init_data(manager, Migration.name()).await {
             Ok(_) => Ok(()),
             Err(err) => {
-                println!("{}", err);
-                Ok(())
+                println!("{:?}", err);
+                panic!()
             }
         }
     }

@@ -11,6 +11,7 @@ pub struct Model {
     pub id: u64,
     pub date: DateTime,
     pub title: String,
+    #[sea_orm(column_type = "Text", nullable)]
     pub content: Option<String>,
     pub temperature: Option<i8>,
     pub weather: Option<Weather>,

@@ -12,6 +12,7 @@ pub struct Model {
     pub email: String,
     pub username: String,
     pub password: String,
+    pub salt: String,
     pub register_time: DateTimeUtc,
     pub last_visit_time: DateTimeUtc,
     pub comment: Option<String>,
