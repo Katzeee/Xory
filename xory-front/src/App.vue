@@ -1,10 +1,5 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
+  <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
@@ -12,13 +7,26 @@ import HelloWorld from './components/HelloWorld.vue'
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/login">Login</RouterLink>
       </nav>
     </div>
-  </header>
-
-  <RouterView />
+  </header> -->
+  <el-config-provider :locale="locale">
+    <RouterView />
+  </el-config-provider>
 </template>
+
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
+import { useAppStore, LangType } from '@/stores'
+import { ref } from 'vue'
+// import
+import en from 'element-plus/es/locale/lang/en'
+import zhCN from 'element-plus/es/locale/lang/zh-cn'
+const appStore = useAppStore()
+let locale = ref(appStore.app.lang === LangType.zhCN ? zhCN : en)
+</script>
 
 <style scoped>
 header {

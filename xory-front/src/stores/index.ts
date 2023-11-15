@@ -1,13 +1,18 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+export enum LangType {
+  enUS,
+  zhCN
+}
+
 interface App {
-  lang?: string
+  lang?: LangType
 }
 
 export const useAppStore = defineStore('app', () => {
   const app: App = {
-    lang: 'en-US'
+    lang: LangType.enUS
   }
 
   return { app }
