@@ -8,8 +8,10 @@ import {
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import type { MessageSchema } from '@/i18n'
+import { computed, unref } from 'vue'
+import { type LocationQueryRaw, stringifyQuery } from 'vue-router'
 
-const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
+// const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 const useToken = () => {
   const isExpiredSoon = true
@@ -36,13 +38,14 @@ export const useRequest = createFetch({
       const status = data.code || 200
       if (status === 200) {
         data = data.data || {}
-      } else if (status === 500) {
+      } else {
         ElMessage.error(data.msg)
         data = ErrorFlag
-      } else if (isExpiredSoon) {
-        // 最后验证本地token效期,快过期时,刷新token
-        // useUserStore().freshToken()
       }
+      // else if (isExpiredSoon) {
+      // 最后验证本地token效期,快过期时,刷新token
+      // useUserStore().freshToken()
+      // }
       return { data, response }
     },
     onFetchError({ response, error }) {
@@ -57,3 +60,20 @@ export const useRequest = createFetch({
     }
   }
 })
+
+export const getQueryUrl = (url: MaybeRef<string>, query?: MaybeRef<unknown>) => {
+  return computed(() => {
+    const _url = unref(url)
+    const _query = unref(query)
+    const queryString = isObject(_query) ? stringifyQuery(_query as LocationQueryRaw) : _query || ''
+    return `${_url}${queryString ? '?' : ''}${queryString}`
+  })
+}
+
+export function useGet<T = unknown>(
+  url: MaybeRef<string>,
+  query?: MaybeRef<unknown>,
+  options?: UseFetchOptions
+): UseFetchReturn<T> {
+  return useRequest<T>(getQueryUrl(url, query), { ...options }).json()
+}

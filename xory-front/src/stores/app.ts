@@ -2,8 +2,8 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export enum LangType {
-  enUS,
-  zhCN
+  enUS = 'en-US',
+  zhCN = 'zh-CN'
 }
 
 interface App {

@@ -1,5 +1,5 @@
 import { createI18n } from 'vue-i18n'
-import { useAppStore } from '@/stores'
+import { useAppStore } from '@/stores/app'
 
 import enUS from './data/en-US.json'
 import zhCN from './data/zh-CN.json'

@@ -1,3 +1,8 @@
 {
-  "APP": "Diary"
+  "APP": "Diary",
+  "login": {
+    "tip": {
+      "requireId": "Incorrect username or password."
+    }
+  }
 }

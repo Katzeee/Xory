@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import { useAppStore, LangType } from '@/stores'
+import { useAppStore, LangType } from '@/stores/app'
 import { ref } from 'vue'
 // import
 import en from 'element-plus/es/locale/lang/en'
