@@ -33,7 +33,7 @@ import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import type { MessageSchema } from '@/i18n'
-import { login } from '@/api/login'
+import { useUserStore } from '@/stores/user'
 
 const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
 const loginFormRef = ref<FormInstance>()
@@ -51,15 +51,16 @@ const rules = reactive<FormRules<LoginForm>>({
   accountIdentifier: [{ required: true, message: t('login.tip.requireId'), trigger: 'blur' }]
 })
 
-const dataRef = ref<unknown>()
+const userStore = useUserStore()
 const onSubmit = async () => {
   await loginFormRef.value
     ?.validate()
     .then(() =>
-      login({ email: loginForm.accountIdentifier, password: loginForm.password }).then((data) => {
-        console.log(data)
-        dataRef.value = data.value
-      })
+      userStore
+        .login({ email: loginForm.accountIdentifier, password: loginForm.password })
+        .then((data) => {
+          console.log(data)
+        })
     )
     .catch(() => console.log('error'))
 }
