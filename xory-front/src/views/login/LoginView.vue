@@ -33,6 +33,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import type { MessageSchema } from '@/i18n'
 import { useUserStore } from '@/stores/user'
+import { router } from '@/router'
 
 const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
 const loginFormRef = ref<FormInstance>()
@@ -57,8 +58,8 @@ const onSubmit = async () => {
     .then(() => {
       userStore
         .login({ email: loginForm.accountIdentifier, password: loginForm.password })
-        .then((data) => {
-          console.log(data)
+        .then(() => {
+          router().push('/')
         })
     })
     .catch(() => console.log('error'))

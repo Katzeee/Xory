@@ -6,8 +6,13 @@ export interface LoginReq {
   password: string
 }
 
+export interface LoginRes {
+  token: string
+  uid: number
+}
+
 export const login = async (loginReq: LoginReq) => {
-  const { data, execute } = useGet<string>('user/login', loginReq)
+  const { data, execute } = useGet<LoginRes>('user/login', loginReq)
   await execute()
-  return data
+  return data!
 }

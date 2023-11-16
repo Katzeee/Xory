@@ -13,15 +13,18 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     token: '',
     userInfo: {
+      uid: -1,
       email: '',
       username: '',
       phone: ''
     }
   }),
+  getters: {},
   actions: {
     async login(loginReq: LoginReq) {
       await login(loginReq).then((data) => {
-        this.token = data.value!
+        this.token = data.value!.token
+        this.userInfo.uid = data.value!.uid
       })
       return this.token
     }
