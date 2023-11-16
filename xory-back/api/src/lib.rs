@@ -1,18 +1,10 @@
-use axum::{
-    http::{
-        header::{ACCESS_CONTROL_ALLOW_METHODS, ACCESS_CONTROL_ALLOW_ORIGIN},
-        HeaderValue, Method,
-    },
-    routing::MethodRouter,
-    Router,
-};
+use axum::{http::Method, routing::MethodRouter, Router};
 use common::db_conn;
 use sea_orm::DatabaseConnection;
 use std::env;
 mod routes;
-// use http::HeaderValue;
-use tower_http::cors::{any, CorsLayer};
-use tower_http::set_header::SetResponseHeaderLayer;
+use tower_http::cors::{Any, CorsLayer};
+use tower_http::trace::TraceLayer;
 
 #[tokio::main]
 pub async fn run() {
@@ -23,12 +15,13 @@ pub async fn run() {
 
     let cors = CorsLayer::new()
         .allow_methods(vec![Method::GET, Method::POST])
-        .allow_origin(any())
-        .allow_headers(any());
+        .allow_origin(Any)
+        .allow_headers(Any);
 
     let app = Router::new()
         .nest("/", routes::compose())
         .layer(cors)
+        .layer(TraceLayer::new_for_http())
         .with_state(state);
 
     // run it with hyper on localhost:3000
