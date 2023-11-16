@@ -39,7 +39,7 @@ export const useRequest = createFetch({
       if (status === 200) {
         data = data.data || {}
       } else {
-        ElMessage.error(data.msg)
+        ElMessage.error(data.message)
         data = ErrorFlag
       }
       // else if (isExpiredSoon) {

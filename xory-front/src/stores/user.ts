@@ -20,9 +20,10 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async login(loginReq: LoginReq) {
-      login(loginReq).then((data) => {
+      await login(loginReq).then((data) => {
         this.token = data.value!
       })
+      return this.token
     }
   }
 })

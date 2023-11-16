@@ -1,6 +1,15 @@
 {
   "APP": "Diary",
+
   "login": {
+    "button": {
+      "login": "Login",
+      "test": "Test"
+    },
+    "placeholder": {
+      "email/phone": "Please input email or phone",
+      "password": "Password"
+    },
     "tip": {
       "requireId": "Incorrect username or password."
     }

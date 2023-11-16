@@ -5,7 +5,7 @@
         <el-form-item prop="accountIdentifier">
           <el-input
             v-model="loginForm.accountIdentifier"
-            :placeholder="t('email/phone')"
+            :placeholder="t('login.placeholder.email/phone')"
             :size="size"
           ></el-input>
         </el-form-item>
@@ -13,15 +13,14 @@
           <el-input
             v-model="loginForm.password"
             type="password"
-            :placeholder="t('password')"
+            :placeholder="t('login.placeholder.password')"
             :size="size"
-            clearable
           ></el-input>
         </el-form-item>
 
         <el-form-item class="button-group">
-          <el-button type="primary" @click="onSubmit">{{ t('login') }}</el-button>
-          <el-button @click="onTest">{{ t('test') }}</el-button>
+          <el-button type="primary" @click="onSubmit">{{ t('login.button.login') }}</el-button>
+          <el-button @click="onTest">{{ t('login.button.test') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -55,13 +54,13 @@ const userStore = useUserStore()
 const onSubmit = async () => {
   await loginFormRef.value
     ?.validate()
-    .then(() =>
+    .then(() => {
       userStore
         .login({ email: loginForm.accountIdentifier, password: loginForm.password })
         .then((data) => {
           console.log(data)
         })
-    )
+    })
     .catch(() => console.log('error'))
 }
 const onTest = () => {
