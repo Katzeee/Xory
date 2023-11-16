@@ -1,5 +1,5 @@
 <template>
-  <div class="root">
+  <div class="root-container">
     <div class="login-form">
       <el-form :model="loginForm" ref="loginFormRef" :rules="rules" :inline="false" :size="size">
         <el-form-item prop="accountIdentifier">
@@ -70,16 +70,7 @@ const onTest = () => {
 }
 </script>
 
-<style scoped>
-.root {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  overflow: hidden;
-}
+<style scoped lang="scss">
 .el-form {
   display: flex;
   flex-direction: column;
@@ -91,5 +82,9 @@ const onTest = () => {
 .el-form-item__content {
   display: flex;
   justify-content: space-between;
+}
+
+body {
+  margin: 0 !important;
 }
 </style>

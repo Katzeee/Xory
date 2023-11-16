@@ -28,7 +28,7 @@ const appStore = useAppStore()
 let locale = ref(appStore.app.lang === LangType.zhCN ? zhCN : en)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 header {
   line-height: 1.5;
   max-height: 100vh;
