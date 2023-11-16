@@ -9,7 +9,7 @@ use axum::{
 };
 use axum_extra::extract::WithRejection;
 use common::response::CommonRes;
-use core::user::{UserLoginReq, UserAddReq};
+use core::user::{UserAddReq, UserLoginReq};
 use middleware_fn::auth::verify_token;
 
 pub fn routes() -> StateRoute {
@@ -44,10 +44,7 @@ pub async fn login(
 
 pub async fn detail(
     state: State<AppState>,
-    header: HeaderMap, // param: WithRejection<Json<user::Model>, response::Res<()>>,
+    WithRejection(Query(req), _): WithRejection<Query<UserLoginReq>, CommonRes<()>>,
 ) -> impl IntoResponse {
-    let token = header.get(header::AUTHORIZATION);
-
-    // verify_token(token);
     CommonRes::success("1")
 }

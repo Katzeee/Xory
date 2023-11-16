@@ -1,5 +1,5 @@
 use anyhow::Result;
-use bcrypt::{hash, DEFAULT_COST};
+use bcrypt::{hash, verify, DEFAULT_COST};
 use common::{entity::user, error::ReqErr};
 use middleware_fn::auth::{create_token, Claims};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
@@ -53,20 +53,40 @@ pub struct UserLoginReq {
     pub password: String,
 }
 
-pub async fn login(db: &DatabaseConnection, user_login_request: UserLoginReq) -> Result<String> {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UserLoginRes {
+    pub token: String,
+    pub uid: u32,
+}
+
+pub async fn login(
+    db: &DatabaseConnection,
+    user_login_request: UserLoginReq,
+) -> Result<UserLoginRes> {
     let user = user::Entity::find()
         .filter(user::Column::Email.eq(&user_login_request.email))
         .one(db)
         .await?;
+    format!("{:?}", user);
     match user {
         Some(user) => {
+            let valid = verify(user_login_request.password + &user.salt, &user.password)?;
+            if !valid {
+                return Err(ReqErr::LoginError.into());
+            }
             let claims = Claims {
                 id: user.uid,
                 email: user.email,
                 ..Default::default()
             };
-            Ok(create_token(claims).await)
+            let token = create_token(claims).await;
+            Ok(UserLoginRes {
+                token: token,
+                uid: user.uid,
+            })
         }
         None => Err(ReqErr::LoginError.into()),
     }
 }
+
+pub struct UserDetailReq {}
