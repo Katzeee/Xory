@@ -70,13 +70,15 @@ const onTest = () => {
 }
 </script>
 
-<style>
+<style scoped>
 .root {
   display: flex;
   height: 100vh;
   width: 100vw;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
 }
 .el-form {
   display: flex;
