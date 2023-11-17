@@ -9,7 +9,7 @@ use sea_orm::{
     sea_query::SimpleExpr,
     ActiveModelTrait,
     ActiveValue::Set,
-    ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter,
+    ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, QueryOrder,
 };
 use serde::{Deserialize, Serialize};
 
@@ -58,6 +58,7 @@ pub struct DiaryListRes {
     pub title: String,
     pub content: Option<String>,
     pub category: u32,
+    pub date: DateTime,
 }
 
 pub async fn list(
@@ -91,7 +92,7 @@ pub async fn list(
     if let Some(category_expr) = category_expr {
         diaries = diaries.filter(category_expr);
     }
-    let diaries = diaries.all(db).await?;
+    let diaries = diaries.order_by_asc(diary::Column::Date).all(db).await?;
     let diaries = diaries
         .into_iter()
         .map(|diary| DiaryListRes {
@@ -99,6 +100,7 @@ pub async fn list(
             title: diary.title,
             content: diary.content,
             category: diary.category,
+            date: diary.date,
         })
         .collect();
     Ok(diaries)
