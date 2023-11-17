@@ -1,12 +1,17 @@
 <template>
   <div class="">
-    <el-button type="primary" size="default" @click="onSearch"></el-button>
+    <el-button style="margin-bottom: 20px" type="primary" size="default" @click="onSearch"
+      >List</el-button
+    >
     <div v-for="(item, index) in diaries" :key="index" class="diary-list-group">
+      <v-card class="mx-auto" max-width="344" hover href="https://www.baidu.com">
+        <v-card-item>
+          <v-card-title> {{ item.title }} </v-card-title>
+          <v-card-subtitle> {{ item.category }} </v-card-subtitle>
+        </v-card-item>
+      </v-card>
+      <v-card></v-card>
       <!-- <ListHeader v-if="!item.title" size="" :title="item.date" /> -->
-      <div>
-        <span>{{ index }}</span> :
-        <span>{{ item.title }}</span>
-      </div>
     </div>
   </div>
 </template>
@@ -35,6 +40,6 @@ const onSearch = async () => {
 
 <style scoped lang="scss">
 .diary-list-group {
-  overflow: auto;
+  margin-bottom: 10px;
 }
 </style>

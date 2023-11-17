@@ -59,7 +59,7 @@ const onSubmit = async () => {
       userStore
         .login({ email: loginForm.accountIdentifier, password: loginForm.password })
         .then(() => {
-          router().push('/')
+          router().push('/diary/list')
         })
     })
     .catch(() => console.log('error'))
