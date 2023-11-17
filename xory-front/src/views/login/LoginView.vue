@@ -67,6 +67,7 @@ const onSubmit = async () => {
 const onTest = () => {
   loginForm.accountIdentifier = 'ttrumpeter4@wordpress.com'
   loginForm.password = 'test'
+  loginFormRef.value!.validate()
 }
 </script>
 
@@ -74,17 +75,13 @@ const onTest = () => {
 .el-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-.button-group {
-  width: 100%;
-}
-.el-form-item__content {
-  display: flex;
-  justify-content: space-between;
-}
-
-body {
-  margin: 0 !important;
+  .el-form-item {
+    margin-bottom: 22px;
+    flex: 1;
+  }
+  .button-group :deep(.el-form-item__content) {
+    display: flex;
+    justify-content: space-around;
+  }
 }
 </style>
