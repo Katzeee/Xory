@@ -1,4 +1,4 @@
-// import '@/assets/main.scss'
+import '@mdi/font/css/materialdesignicons.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
@@ -18,7 +18,16 @@ app.use(i18n())
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-const vuetify = createVuetify({})
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+const vuetify = createVuetify({
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi
+    }
+  }
+})
 app.use(vuetify)
 
 app.mount('#app')

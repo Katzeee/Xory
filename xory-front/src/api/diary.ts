@@ -9,10 +9,11 @@ export interface DiaryListReq {
 }
 
 export interface DiaryListRes {
-  title: string
-  content: string
-  id: number
-  category: number
+  title?: string | undefined
+  content?: string
+  id?: number
+  category?: number
+  date?: Date | string
 }
 
 export const diaryList = async (diaryListReq: DiaryListReq) => {
@@ -27,14 +28,14 @@ export interface DiaryDetailReq {
 
 export interface DiaryDetailRes {
   id: number
-  date: DateTime
+  date: Date
   title: string
   content?: string
   temperature?: number
   weather?: string
   category: number
-  date_create: DateTime
-  date_modify: DateTime
+  date_create: Date
+  date_modify: Date
   uid: number
   longitude: number
   latitude: number

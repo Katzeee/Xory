@@ -59,6 +59,7 @@
 }
 
 body {
+  display: flex;
   height: 100vh;
   width: 100vw;
   color: var(--color-text);
@@ -84,4 +85,28 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  margin: 0;
+  padding: 1rem;
+  font-weight: normal;
+  display: flex;
+  flex: 1 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  width: 12px;
+  background-color: var(--vt-c-divider-light-2);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+  background-color: var(--vt-c-divider-dark-1);
+  cursor: pointer;
+}
+
+html {
+  overflow: hidden;
 }
