@@ -3,12 +3,16 @@ import DiaryListView from '@/views/diary/DiaryListView.vue'
 import LoginView from '@/views/login/LoginView.vue'
 import AboutView from '@/views/AboutView.vue'
 import { useUserStore } from '@/stores/user'
+import DiaryDetailView from '@/views/diary/DiaryDetailView.vue'
 
 const routes = [
   {
     path: '/diary',
     // component: AboutView,
-    children: [{ path: 'list', component: DiaryListView }]
+    children: [
+      { path: 'list', component: DiaryListView },
+      { path: 'detail/:id', component: DiaryDetailView }
+    ]
   },
   {
     path: '/about',
