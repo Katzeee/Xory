@@ -18,9 +18,9 @@
             })
           }}
         </template>
-        <div v-if="!item.isHeader">
+        <v-card v-if="!item.isHeader" @click="onDetail(item.id!)" class="diary-item">
           {{ item.title }}
-        </div>
+        </v-card>
         <div v-else style="color: brown">
           {{
             getYearMonth(item.date as Date).toLocaleDateString(appStore.app.lang, {
@@ -133,5 +133,14 @@ const onDetail = (id: number) => {
 .diary-list-group {
   margin-bottom: 12px;
   overflow-y: scroll;
+  :deep(.v-timeline-item__body) {
+    justify-self: auto !important;
+    padding: 10px;
+    margin: 10px;
+    overflow: hidden;
+  }
+  .diary-item {
+    padding: 10px;
+  }
 }
 </style>

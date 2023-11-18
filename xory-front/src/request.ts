@@ -49,6 +49,7 @@ export const useRequest = createFetch({
       return { data, response }
     },
     onFetchError({ response, error }) {
+      ElMessage.error('fetch error')
       // if (response?.status === 401) {
       //   ElMessage.warning(t('commonTip.loginExpired'))
       //   useUserStore().frontEndLogout()
