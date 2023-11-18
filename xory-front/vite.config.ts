@@ -13,10 +13,18 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      resolvers: [ElementPlusResolver()]
+      resolvers: [
+        ElementPlusResolver({
+          exclude: /^ElAmap[A-Z]*/
+        })
+      ]
     }),
     Components({
-      resolvers: [ElementPlusResolver()]
+      resolvers: [
+        ElementPlusResolver({
+          exclude: /^ElAmap[A-Z]*/
+        })
+      ]
     }),
     vuetify({ autoImport: true }) // Enabled by default
   ],

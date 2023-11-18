@@ -30,4 +30,16 @@ const vuetify = createVuetify({
 })
 app.use(vuetify)
 
+import { initAMapApiLoader } from '@vuemap/vue-amap'
+import '@vuemap/vue-amap/dist/style.css'
+const key = import.meta.env.VITE_AMAP_KEY
+const sKey = import.meta.env.VITE_AMAP_SKEY
+initAMapApiLoader({
+  key: key,
+  securityJsCode: sKey
+  //Loca:{
+  //  version: '2.0.0'
+  //} // 如果需要使用loca组件库，需要加载Loca
+})
+
 app.mount('#app')

@@ -12,6 +12,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@vuemap/vue-amap": "^2.0.23",
     "@vueuse/core": "^10.6.1",
     "element-plus": "^2.4.2",
     "pinia": "^2.1.7",
@@ -29,6 +30,7 @@
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/tsconfig": "^0.4.0",
+    "@vuemap/unplugin-resolver": "^2.0.0",
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
     "npm-run-all2": "^6.1.1",

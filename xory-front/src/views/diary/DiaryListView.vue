@@ -40,11 +40,9 @@
 <script setup lang="ts">
 import { type DiaryListRes, diaryList } from '@/api/diary'
 import { useUserStore } from '@/stores/user'
-import { dateEquals } from 'element-plus'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/stores/app'
-import { tr } from 'element-plus/es/locale/index.mjs'
 const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore()
@@ -80,14 +78,9 @@ const getYearMonthDay = (date: Date) => {
 }
 
 const postProcess = () => {
-  let curMonth = 0
-  let curDay = 0
-  diaries.value
-
   if (diaries.value.length === 0) {
     return
   }
-
   diaries.value.splice(0, 0, {
     isHeader: true,
     date: new Date(diaries.value[0].date!)

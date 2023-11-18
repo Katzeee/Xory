@@ -12,7 +12,7 @@ import { computed, unref } from 'vue'
 import { type LocationQueryRaw, stringifyQuery } from 'vue-router'
 
 // const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
-const baseUrl = import.meta.env.VITE_API_BASE_URL
+const baseUrl = import.meta.env.VITE_BACKEND_API_BASE_URL
 const useToken = () => {
   const isExpiredSoon = true
   const token = '123'
