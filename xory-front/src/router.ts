@@ -4,10 +4,12 @@ import LoginView from '@/views/login/LoginView.vue'
 import AboutView from '@/views/AboutView.vue'
 import { useUserStore } from '@/stores/user'
 import DiaryDetailView from '@/views/diary/DiaryDetailView.vue'
+import TestView from '@/views/TestView.vue'
 
 const routes = [
   {
     path: '/diary',
+    name: 'Diary',
     // component: AboutView,
     children: [
       { path: 'list', component: DiaryListView },
@@ -26,6 +28,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginView
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: TestView
   }
 ]
 
@@ -40,6 +47,7 @@ export const router = () => {
   routerInner.beforeEach((to, from, next) => {
     switch (to.name) {
       case 'Login':
+      case 'Test':
         next()
         break
       default:

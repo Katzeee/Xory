@@ -1,13 +1,15 @@
 <template>
-  <div class="root">
+  <div class="column-root-container">
+    <v-btn @click="onBack">Back</v-btn>
     <div>
-      <v-btn @click="onBack">Back</v-btn>
+      <v-text-field v-model="diary.title" variant="underlined" class="title"></v-text-field>
     </div>
-    <pre style="white-space: pre-wrap">{{ JSON.stringify(diary, null, 2) }}</pre>
+
     <div class="map-container" v-if="diary.showMap">
       <el-amap ref="mapRef" :center="center" :zoom="zoom" @init="init" />
     </div>
     <div v-else>No map info.</div>
+    <pre style="white-space: pre-wrap">{{ JSON.stringify(diary, null, 2) }}</pre>
   </div>
 </template>
 
@@ -52,16 +54,27 @@ const init = (map: any) => {
 </script>
 
 <style scoped lang="scss">
-.root {
-  display: flex;
-  flex-direction: column;
+.title {
+  flex: 0 1 auto;
+  justify-self: flex-start;
+  :deep(input) {
+    font-size: 40px;
+    padding: 6px;
+  }
+  :deep(.v-field__outline)::before {
+    display: none;
+  }
+}
+button {
+  margin-bottom: 20px;
+}
+.map-container {
   flex: 1;
-  button {
-    margin-bottom: 20px;
-  }
-  .map-container {
-    flex: 1;
-    max-height: 300px;
-  }
+  max-height: 300px;
+  min-height: 100px;
+}
+
+pre {
+  flex-grow: 1;
 }
 </style>
