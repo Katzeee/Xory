@@ -37,9 +37,9 @@ const sKey = import.meta.env.VITE_AMAP_SKEY
 initAMapApiLoader({
   key: key,
   securityJsCode: sKey
-  //Loca:{
-  //  version: '2.0.0'
-  //} // 如果需要使用loca组件库，需要加载Loca
+  // Loca: {
+  // version: '2.0.0'
+  // } // 如果需要使用loca组件库，需要加载Loca
 })
 
 app.mount('#app')

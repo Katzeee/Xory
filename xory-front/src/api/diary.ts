@@ -27,18 +27,18 @@ export interface DiaryDetailReq {
 }
 
 export interface DiaryDetailRes {
-  id: number
-  date: Date
-  title: string
+  id?: number
+  date?: Date
+  title?: string
   content?: string
   temperature?: number
   weather?: string
-  category: number
-  date_create: Date
-  date_modify: Date
-  uid: number
-  longitude: number
-  latitude: number
+  category?: number
+  date_create?: Date
+  date_modify?: Date
+  uid?: number
+  longitude?: number
+  latitude?: number
 }
 
 export const diaryDetail = async (diaryDetailReq: DiaryDetailReq) => {

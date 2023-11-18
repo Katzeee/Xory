@@ -4,46 +4,50 @@
       <v-btn @click="onBack">Back</v-btn>
     </div>
     <pre style="white-space: pre-wrap">{{ JSON.stringify(diary, null, 2) }}</pre>
-    <div class="map-page-container">
-      <el-amap :center="center" :zoom="zoom" @init="init" />
+    <div class="map-container" v-if="diary.showMap">
+      <el-amap ref="mapRef" :center="center" :zoom="zoom" @init="init" />
     </div>
+    <div v-else>No map info.</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { diaryDetail, type DiaryDetailReq } from '@/api/diary'
+import { diaryDetail, type DiaryDetailRes } from '@/api/diary'
+import { ElAmap } from '@vuemap/vue-amap'
+declare let AMap: any
 const route = useRoute()
 const router = useRouter()
 
-const diary = ref<DiaryDetailReq>({
-  id: 0
-})
-
-diaryDetail({ id: +route.params.id }).then((data) => {
-  diary.value = data.value!
-})
+interface DiaryDetailDisp extends DiaryDetailRes {
+  showMap?: boolean
+}
 
 const onBack = () => {
   router.go(-1)
 }
 
-import { ElAmap } from '@vuemap/vue-amap'
+const diary = ref<DiaryDetailDisp>({})
 
-const zoom = ref(12)
-const center = ref([121.59996, 31.197646])
-let map: any
-declare let AMap: any
-const init = (e: any) => {
-  console.log(AMap)
-
-  const marker = new AMap.Marker({
-    position: [121.59996, 31.197646]
+const requestDiaryDetail = async () => {
+  await diaryDetail({ id: +route.params.id }).then((data) => {
+    let { latitude, longitude } = data.value!
+    diary.value = data.value!
+    diary.value.showMap = latitude != undefined && longitude != undefined
   })
-  e.add(marker)
-  map = e
-  console.log('map init: ', map)
+}
+
+requestDiaryDetail()
+
+const zoom = ref(1)
+let center = ref([0, 0])
+const init = (map: any) => {
+  center.value = [diary.value.longitude!, diary.value.latitude!]
+  const marker = new AMap.Marker({
+    position: center.value
+  })
+  map.add(marker)
 }
 </script>
 
@@ -55,8 +59,9 @@ const init = (e: any) => {
   button {
     margin-bottom: 20px;
   }
-  .map-page-container {
+  .map-container {
     flex: 1;
+    max-height: 300px;
   }
 }
 </style>
