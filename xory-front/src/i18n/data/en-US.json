@@ -13,5 +13,13 @@
     "tip": {
       "requireId": "Incorrect username or password."
     }
+  },
+  "diary": {
+    "detail": {
+      "tag": "Tag",
+      "date": "Date",
+      "weather": "Weather",
+      "mood": "Mood"
+    }
   }
 }

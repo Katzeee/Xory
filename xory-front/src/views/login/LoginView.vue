@@ -35,8 +35,8 @@ import type { MessageSchema } from '@/i18n'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
 const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
+
 const loginFormRef = ref<FormInstance>()
 const size = ref('large')
 
