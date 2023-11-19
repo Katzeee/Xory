@@ -27,7 +27,10 @@ pub struct DiaryAddReq {
     pub latitude: Option<Decimal>,
 }
 
-pub async fn add(db: &DatabaseConnection, diary_add_request: DiaryAddReq) -> Result<diary::Model> {
+pub async fn add(
+    db: &DatabaseConnection,
+    diary_add_request: DiaryAddReq,
+) -> Result<DiaryDetailRes> {
     let diary = diary::ActiveModel {
         date: Set(diary_add_request.date),
         title: Set(diary_add_request.title),
@@ -44,10 +47,10 @@ pub async fn add(db: &DatabaseConnection, diary_add_request: DiaryAddReq) -> Res
     if !diary_add_request.tags.is_empty() {
         let diary_to_diary_tags = diary_add_request
             .tags
-            .into_iter()
+            .iter()
             .map(|tag| diary_to_diary_tag::ActiveModel {
                 did: Set(diary.did),
-                tid: Set(tag),
+                tid: Set(tag.to_owned()),
             })
             .collect::<Vec<diary_to_diary_tag::ActiveModel>>();
         diary_to_diary_tag::Entity::insert_many(diary_to_diary_tags)
@@ -55,7 +58,10 @@ pub async fn add(db: &DatabaseConnection, diary_add_request: DiaryAddReq) -> Res
             .await?;
     }
     txn.commit().await?;
-    Ok(diary)
+    Ok(DiaryDetailRes::from_diary_and_tags(
+        diary,
+        diary_add_request.tags,
+    ))
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -146,6 +152,25 @@ pub struct DiaryDetailRes {
     pub tags: Vec<u32>,
 }
 
+impl DiaryDetailRes {
+    fn from_diary_and_tags(diary: diary::Model, tags: Vec<u32>) -> Self {
+        Self {
+            did: diary.did,
+            date: diary.date,
+            title: diary.title,
+            content: diary.content,
+            temperature: diary.temperature,
+            weather: diary.weather,
+            date_create: diary.date_create,
+            date_modify: diary.date_modify,
+            uid: diary.uid,
+            longitude: diary.longitude,
+            latitude: diary.latitude,
+            tags: tags,
+        }
+    }
+}
+
 pub async fn detail(
     db: &DatabaseConnection,
     diary_detail_request: DiaryDetailReq,
@@ -158,20 +183,10 @@ pub async fn detail(
         Err(ReqErr::NoResError.into())
     } else {
         let (diary, tags) = diary[0].to_owned();
-        Ok(DiaryDetailRes {
-            tags: tags.into_iter().map(|tag| tag.tid).collect(),
-            did: diary.did,
-            date: diary.date,
-            title: diary.title,
-            content: diary.content,
-            temperature: diary.temperature,
-            weather: diary.weather,
-            date_create: diary.date_create,
-            date_modify: diary.date_modify,
-            uid: diary.uid,
-            longitude: diary.longitude,
-            latitude: diary.latitude,
-        })
+        Ok(DiaryDetailRes::from_diary_and_tags(
+            diary,
+            tags.into_iter().map(|tag| tag.tid).collect(),
+        ))
     }
 }
 
@@ -249,18 +264,8 @@ pub async fn modify(
         .find_related(diary_to_diary_tag::Entity)
         .all(db)
         .await?;
-    Ok(DiaryDetailRes {
-        tags: tags.into_iter().map(|tag| tag.tid).collect(),
-        did: diary.did,
-        date: diary.date,
-        title: diary.title,
-        content: diary.content,
-        temperature: diary.temperature,
-        weather: diary.weather,
-        date_create: diary.date_create,
-        date_modify: diary.date_modify,
-        uid: diary.uid,
-        longitude: diary.longitude,
-        latitude: diary.latitude,
-    })
+    Ok(DiaryDetailRes::from_diary_and_tags(
+        diary,
+        tags.into_iter().map(|tag| tag.tid).collect(),
+    ))
 }

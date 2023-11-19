@@ -31,11 +31,11 @@ content-type: application/json
 
 {
     "date": "2022-06-13T15:45:30",
-    "title": "Test diary",
+    "title": "Test diary508",
     "content": "Test content",
     "temperature": null,
     "weather": null,
-    "tag": [1,2],
+    "tags": [1,3],
     "uid": 1,
     "longtitude": null,
     "latitude": null
@@ -48,7 +48,7 @@ Authorization: hi
 
 ### Detail diaries
 
-GET http://127.0.0.1:3000/diary/detail?did=1 HTTP/1.1
+GET http://127.0.0.1:3000/diary/detail?did=506 HTTP/1.1
 Authorization: hi
 
 ### Modify diary
