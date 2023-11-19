@@ -1,6 +1,5 @@
 insert into user (username, email, password, salt, group_id, comment) values ('dgennrich0', 'cdelahunty0@yellowpages.com', '$2b$12$GyU4vpJlovjuelOCgwQo0eNJfwoeO01Te1gk6nNZBUHNKOKTeFJrS', 'oJ8/HI0<', 1, 'åß∂ƒ©˙∆˚¬…æ');
 insert into user (username, email, password, salt, group_id, comment) values ('zhalbert1', 'ndart1@nasa.gov', '$2b$12$z/ST1tfAQr2wMILCjXa3NuZGlLm6BX7Lmt9UJz8HNmJcj0xIIwKbm', 'pE7(<B37oW''js', 2, '<svg><script>0<1>alert(''XSS'')</script>');
--- insert into user (username, email, password, salt, group_id, comment) values ('bpickover2', 'amaker2@epa.gov', '$2b$12$gmu96MYsHL4e1fJz/bRqbOte.y8Xta7aC30fWbO34ypg2OG.W9mwG', 'aU2(Cp8`''+m\', 1, '¡™£¢∞§¶•ªº–≠');
 insert into user (username, email, password, salt, group_id, comment) values ('vservante3', 'ecroal3@barnesandnoble.com', '$2b$12$5Czx6KxzPnld5KP5/tt8euJqnCTosdu.BImi.kS.xXpYoZeQNhrU6', 'hO2~''k3f0G', 1, '0/0');
 insert into user (username, email, password, salt, group_id, comment) values ('jsenecaut4', 'ttrumpeter4@wordpress.com', '$2b$12$GCMNvGAOVa3Zrsh4sKyQeu818aYXvUuGV4zwTW1hQPTNMWmKqozt2', 'kD7{|n4%', 1, null);
 insert into user (username, email, password, salt, group_id, comment) values ('pdenormanville5', 'bcumberland5@com.com', '$2b$12$je6m9fYOkSW71hmZxfHjMuKr2qHkqFgH6wrwYhRuS9i0UJxaRpX4q', 'qO0"}D$O@', 1, 'Ω≈ç√∫˜µ≤≥÷');

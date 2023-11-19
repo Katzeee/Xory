@@ -17,9 +17,20 @@ pub async fn init_data(manager: &SchemaManager<'_>, migration_name: &str) -> Res
     let dir = DATA_DIR.to_owned() + migration_name;
     let mut entries = fs::read_dir(&dir)
         .await
-        .with_context(|| format!("Not any corresponding mockdata folder! No mockdata inserted."))?;
-    while let Some(res) = entries.next().await {
-        let path = res?.path();
+        .with_context(|| format!("Not any corresponding mockdata folder! No mockdata inserted."))?
+        .fold(Vec::new(), |mut acc, entry_result| {
+            match entry_result {
+                Ok(entry) => acc.push(entry),
+                Err(err) => eprintln!("Error reading dir entry: {:?}", err),
+            }
+            acc
+        })
+        .await;
+    entries.sort_by_key(|entry| entry.path());
+    let mut entries = entries.into_iter();
+    while let Some(res) = entries.next() {
+        let path = res.path();
+        println!("Start to init {:?}.", path);
         let sql_vec = get_insert_sql_string(path.clone(), db_end).await?;
         for sql in sql_vec {
             let stmt = Statement::from_string(db_end, &sql).to_owned();

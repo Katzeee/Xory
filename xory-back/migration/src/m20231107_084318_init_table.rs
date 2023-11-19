@@ -31,27 +31,40 @@ enum User {
 }
 
 #[derive(DeriveIden)]
-enum DiaryCategory {
+enum DiaryTag {
     Table,
-    Id,
+    Tid,
     Name,
+}
+
+#[derive(DeriveIden)]
+enum UserToDiaryTag {
+    Table,
+    Uid,
+    Tid,
 }
 
 #[derive(DeriveIden)]
 enum Diary {
     Table,
-    Id,
+    Did,
     Date,
     Title,
     Content,
     Temperature,
     Weather,
-    Category,
     DateCreate,
     DateModify,
     Uid,
     Longitude,
     Latitude,
+}
+
+#[derive(DeriveIden)]
+enum DiaryToDiaryTag {
+    Table,
+    Did,
+    Tid,
 }
 
 #[derive(DeriveIden)]
@@ -144,11 +157,11 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(User::Avatar).string().null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("group_id")
+                            .name("fk_user_user_group_group_id")
                             .from_col(User::GroupId)
                             .to(UserGroup::Table, UserGroup::Id)
-                            .on_delete(ForeignKeyAction::Restrict)
-                            .on_update(ForeignKeyAction::Restrict),
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )
@@ -157,23 +170,19 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(DiaryCategory::Table)
+                    .table(DiaryTag::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(DiaryCategory::Id)
+                        ColumnDef::new(DiaryTag::Tid)
                             .unsigned()
                             .not_null()
                             .auto_increment(),
                     )
-                    .col(
-                        ColumnDef::new(DiaryCategory::Name)
-                            .string_len(50)
-                            .not_null(),
-                    )
+                    .col(ColumnDef::new(DiaryTag::Name).string_len(50).not_null())
                     .primary_key(
                         IndexCreateStatement::new()
-                            .col(DiaryCategory::Id)
-                            .index_type(IndexType::BTree),
+                            .col(DiaryTag::Tid)
+                            .index_type(IndexType::Hash),
                     )
                     .to_owned(),
             )
@@ -183,10 +192,11 @@ impl MigrationTrait for Migration {
             .get_connection()
             .execute_unprepared(
                 r#"
-                INSERT INTO `diary_category` VALUES (null, 'memo'); 
-                INSERT INTO `diary_category` VALUES (null, 'study');
-                INSERT INTO `diary_category` VALUES (null, 'work');
-                INSERT INTO `diary_category` VALUES (null, 'entertainment');
+                INSERT INTO `diary_tag` VALUES (null, 'study');
+                INSERT INTO `diary_tag` VALUES (null, 'work');
+                INSERT INTO `diary_tag` VALUES (null, 'entertainment');
+                INSERT INTO `diary_tag` VALUES (null, 'sports');
+                INSERT INTO `diary_tag` VALUES (null, 'memo'); 
                 "#,
             )
             .await?;
@@ -197,7 +207,7 @@ impl MigrationTrait for Migration {
                     .table(Diary::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(Diary::Id)
+                        ColumnDef::new(Diary::Did)
                             .big_unsigned()
                             .not_null()
                             .auto_increment(),
@@ -214,7 +224,6 @@ impl MigrationTrait for Migration {
                             )
                             .default(WeatherCategory::Sunny.to_string()),
                     )
-                    .col(ColumnDef::new(Diary::Category).unsigned().not_null())
                     .col(
                         ColumnDef::new(Diary::DateCreate)
                             .date_time()
@@ -232,30 +241,84 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Diary::Latitude).decimal_len(9, 6).null())
                     .primary_key(
                         IndexCreateStatement::new()
-                            .col(Diary::Id)
-                            .index_type(IndexType::BTree),
+                            .col(Diary::Did)
+                            .index_type(IndexType::Hash),
                     )
                     .foreign_key(
                         ForeignKeyCreateStatement::new()
-                            .name("uid")
+                            .name("fk_diary_user_uid")
                             .from_col(Diary::Uid)
                             .to(User::Table, User::Uid)
-                            .on_delete(ForeignKeyAction::Restrict)
-                            .on_update(ForeignKeyAction::Restrict),
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(UserToDiaryTag::Table)
+                    .if_not_exists()
+                    .col(ColumnDef::new(UserToDiaryTag::Uid).unsigned().not_null())
+                    .col(ColumnDef::new(UserToDiaryTag::Tid).unsigned().not_null())
+                    .foreign_key(
+                        ForeignKeyCreateStatement::new()
+                            .name("fk_user_to_diary_tag_user_uid")
+                            .from_col(UserToDiaryTag::Uid)
+                            .to(User::Table, User::Uid)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKeyCreateStatement::new()
-                            .name("category")
-                            .from_col(Diary::Category)
-                            .to(DiaryCategory::Table, DiaryCategory::Id)
-                            .on_delete(ForeignKeyAction::Restrict)
-                            .on_update(ForeignKeyAction::Restrict),
+                            .name("fk_user_to_diary_tag_diary_tag_tid")
+                            .from_col(UserToDiaryTag::Tid)
+                            .to(DiaryTag::Table, DiaryTag::Tid)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
                     )
-                    .index(
+                    .primary_key(
                         IndexCreateStatement::new()
-                            .name("category_index")
-                            .col(Diary::Category)
-                            .index_type(IndexType::BTree),
+                            .col(UserToDiaryTag::Uid)
+                            .col(UserToDiaryTag::Tid),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(DiaryToDiaryTag::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(DiaryToDiaryTag::Did)
+                            .big_unsigned()
+                            .not_null(),
+                    )
+                    .col(ColumnDef::new(DiaryToDiaryTag::Tid).unsigned().not_null())
+                    .foreign_key(
+                        ForeignKeyCreateStatement::new()
+                            .name("fk_diary_to_diary_tag_diary_did")
+                            .from_col(DiaryToDiaryTag::Did)
+                            .to(Diary::Table, Diary::Did)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKeyCreateStatement::new()
+                            .name("fk_diary_to_diary_tag_diary_tag_tid")
+                            .from_col(DiaryToDiaryTag::Tid)
+                            .to(DiaryTag::Table, DiaryTag::Tid)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .primary_key(
+                        IndexCreateStatement::new()
+                            .col(DiaryToDiaryTag::Did)
+                            .col(DiaryToDiaryTag::Tid),
                     )
                     .to_owned(),
             )
@@ -271,8 +334,6 @@ impl MigrationTrait for Migration {
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
-
         manager
             .drop_table(Table::drop().table(Diary::Table).to_owned())
             .await?;
@@ -283,7 +344,13 @@ impl MigrationTrait for Migration {
             .drop_table(Table::drop().table(UserGroup::Table).to_owned())
             .await?;
         manager
-            .drop_table(Table::drop().table(DiaryCategory::Table).to_owned())
+            .drop_table(Table::drop().table(DiaryTag::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(UserToDiaryTag::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(DiaryToDiaryTag::Table).to_owned())
             .await?;
         Ok(())
     }
