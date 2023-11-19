@@ -35,7 +35,7 @@ content-type: application/json
     "content": "Test content",
     "temperature": null,
     "weather": null,
-    "category": 1,
+    "tag": [1,2],
     "uid": 1,
     "longtitude": null,
     "latitude": null
@@ -43,12 +43,12 @@ content-type: application/json
 
 ### List diaries
 
-GET http://127.0.0.1:3000/diary/list?uid=1&page_number=1&page_size=10&keywords=[]&category=[] HTTP/1.1
+GET http://127.0.0.1:3000/diary/list?uid=1&page_number=1&page_size=10&keywords=[]&tags=[1,2,3,4,5] HTTP/1.1
 Authorization: hi
 
 ### Detail diaries
 
-GET http://127.0.0.1:3000/diary/detail?id=1 HTTP/1.1
+GET http://127.0.0.1:3000/diary/detail?did=1 HTTP/1.1
 Authorization: hi
 
 ### Modify diary
@@ -58,13 +58,14 @@ Authorization: hi
 content-type: application/json
 
 {
-    "id": 1,
+    "did": 1,
     "date": "2022-06-13T15:45:30",
-    "title": "Test diary",
+    "title": "Test diary1",
     "content": "Test content",
     "temperature": null,
     "weather": null,
-    "category": 1,
     "longtitude": null,
-    "latitude": null
+    "latitude": null,
+    "rm_tags": [3],
+    "add_tags": [1, 3]
 }
