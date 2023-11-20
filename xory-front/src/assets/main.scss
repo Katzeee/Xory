@@ -13,4 +13,11 @@
   flex-grow: 1;
   flex-direction: column;
   overflow-y: scroll;
+  margin: 0;
+  padding: 0;
+}
+
+.v-application {
+  // background-color: inherit;
+  padding: 20px;
 }

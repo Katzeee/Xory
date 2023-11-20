@@ -1,5 +1,5 @@
 <template>
-  <div class="root-container">
+  <v-container class="column-root-container">
     <div class="login-form">
       <el-form :model="loginForm" ref="loginFormRef" :rules="rules" :inline="false" :size="size">
         <el-form-item prop="accountIdentifier">
@@ -24,7 +24,7 @@
         </el-form-item>
       </el-form>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script setup lang="ts">
