@@ -2,7 +2,9 @@
   <v-container class="column-root-container">
     <v-app-bar color="primary" density="compact">
       <template v-slot:prepend>
-        <v-icon icon="mdi-arrow-left" @click="onBack"></v-icon>
+        <v-btn icon @click="onBack">
+          <v-icon icon="mdi-arrow-left"></v-icon>
+        </v-btn>
       </template>
     </v-app-bar>
     <v-main>
@@ -22,7 +24,7 @@
         </attribute-item>
         <attribute-item :name="t('diary.detail.date')">
           <template v-slot:content>
-            <div class="attribute-content">{{ diary.date?.toString() }}</div>
+            <div class="attribute-content">{{ diary.date }}</div>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.weather')">
@@ -54,12 +56,11 @@
           <span v-else>{{ diary.date_modify }}</span>
         </div>
       </div>
-
-      <div class="map-container" v-if="diary.showMap">
-        <el-amap ref="mapRef" :center="center" :zoom="zoom" @init="init" />
-      </div>
-      <div v-else>No map info.</div>
     </v-main>
+    <div class="map-container" v-if="diary.showMap">
+      <el-amap ref="mapRef" :center="center" :zoom="zoom" @init="init" />
+    </div>
+    <div v-else>No map info.</div>
   </v-container>
 </template>
 
@@ -71,10 +72,12 @@ import { ElAmap } from '@vuemap/vue-amap'
 import type { MessageSchema } from '@/i18n'
 import { useI18n } from 'vue-i18n'
 import AttributeItem from './AttributeItem.vue'
+import { useAppStore } from '@/stores/app'
 declare let AMap: any
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
+const appStore = useAppStore()
 
 interface DiaryDetailDisp extends DiaryDetailRes {
   showMap?: boolean
@@ -88,15 +91,30 @@ const createModifyFlag = ref(true)
 const diary = ref<DiaryDetailDisp>({})
 const requestDiaryDetail = async () => {
   await diaryDetail({ did: Number(route.params.id) }).then((data) => {
-    let { latitude, longitude } = data.value!
+    let { latitude, longitude, date, date_create, date_modify } = data.value!
     diary.value = data.value!
+    diary.value.date = new Date(date as string)
+    diary.value.date_create = new Date(date_create as string).toLocaleString(appStore.app.lang, {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+    diary.value.date_modify = new Date(date_modify as string).toLocaleString(appStore.app.lang, {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
     diary.value.showMap = latitude != undefined && longitude != undefined
   })
 }
 
 requestDiaryDetail()
 
-const zoom = ref(1)
+const zoom = ref(4)
 let center = ref([0, 0])
 const init = (map: any) => {
   center.value = [diary.value.longitude!, diary.value.latitude!]

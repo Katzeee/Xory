@@ -28,15 +28,15 @@ export interface DiaryDetailReq {
 
 export interface DiaryDetailRes {
   did?: number
-  date?: Date
+  date?: Date | string
   title?: string
   content?: string
   temperature?: number
   weather?: string
   mood?: string
   tags?: number[] | string
-  date_create?: Date
-  date_modify?: Date
+  date_create?: Date | string
+  date_modify?: Date | string
   uid?: number
   longitude?: number
   latitude?: number
