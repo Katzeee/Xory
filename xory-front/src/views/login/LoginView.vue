@@ -73,6 +73,9 @@ const onTest = () => {
 </script>
 
 <style scoped lang="scss">
+.column-root-container {
+  justify-content: center;
+}
 .el-form {
   display: flex;
   flex-direction: column;

@@ -1,7 +1,8 @@
 <template>
   <v-container class="column-root-container">
-    <v-app-bar :elevation="2"></v-app-bar>
-    <v-btn @click="onBack">Back</v-btn>
+    <v-app-bar :elevation="2">
+      <v-btn @click="onBack">Back</v-btn>
+    </v-app-bar>
     <v-textarea
       rows="1"
       auto-grow

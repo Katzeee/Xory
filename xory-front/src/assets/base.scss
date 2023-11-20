@@ -63,7 +63,6 @@ body,
 #app {
   height: calc(var(--vh) * 100);
   margin: 0;
-  background-color: var(--color-background);
   font-family: var(--font-family);
 }
 
@@ -83,7 +82,3 @@ body,
   background-color: var(--vt-c-divider-dark-1);
   cursor: pointer;
 }
-
-// html {
-//   overflow: hidden;
-// }

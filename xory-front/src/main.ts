@@ -2,7 +2,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
+// import 'element-plus/dist/index.css'
 import App from '@/App.vue'
 
 const app = createApp(App)
@@ -25,6 +25,16 @@ const vuetify = createVuetify({
     aliases,
     sets: {
       mdi
+    }
+  },
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        colors: {
+          // "background": '#f2f2f2'
+        }
+      }
     }
   }
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="root">
+  <v-container class="column-root-container">
     <!-- <div v-for="(item, index) in diaries" :key="index" class="diary-list-group">
       <v-card class="mx-auto" max-width="344" @click="onDetail(item.id)" hover>
         <v-card-item prepend-icon="mdi-weather-pouring">
@@ -9,8 +9,8 @@
       </v-card>
       <v-card></v-card>
     </div> -->
-    <v-timeline side="end" class="diary-list-group">
-      <v-timeline-item size="x-small" dot-color="blue-darken-4" v-for="(item, index) in diaries" :key="index">
+    <v-timeline line-color="rgb(var(--v-theme-on-surface-variant))" side="end" class="diary-list-group">
+      <v-timeline-item size="x-small" v-for="(item, index) in diaries" :key="index">
         <template v-if="!item.isHeader && item.showDate" v-slot:opposite>
           {{
             (item.date as Date).toLocaleDateString(appStore.app.lang, {
@@ -18,7 +18,13 @@
             })
           }}
         </template>
-        <v-card v-if="!item.isHeader" @click="onDetail(item.did!)" class="diary-item">
+        <v-card
+          variant="elevated"
+          v-if="!item.isHeader"
+          @click="onDetail(item.did!)"
+          class="diary-item"
+          hover
+        >
           {{ item.title }}
         </v-card>
         <div v-else style="color: brown">
@@ -31,10 +37,8 @@
         </div>
       </v-timeline-item>
     </v-timeline>
-    <v-btn style="margin: 16px 8px 0" color="blue-darken-4" size="default" @click="onSearch"
-      >List</v-btn
-    >
-  </div>
+    <v-btn style="margin: 16px 8px 0" size="default" @click="onSearch">List</v-btn>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -126,6 +130,7 @@ const onDetail = (id: number) => {
 
 .v-timeline {
   grid-auto-rows: min-content;
+  row-gap: 0px !important;
 }
 
 .diary-list-group {
@@ -134,9 +139,14 @@ const onDetail = (id: number) => {
   :deep(.v-timeline-item__body) {
     justify-self: auto !important;
     overflow: hidden;
+    // will cause time LINE bug
+    // padding-bottom: 17px;
+    // padding-top: 7px;
+    // padding-right: 8px !important;
   }
   .diary-item {
     padding: 10px;
+    margin: 7px 8px 17px 0px;
   }
 }
 </style>
