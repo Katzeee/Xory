@@ -1,7 +1,7 @@
 use anyhow::Result;
 use chrono::Utc;
 use common::{
-    entity::{diary, diary_to_diary_tag, sea_orm_active_enums::Weather},
+    entity::{diary, diary_to_diary_tag, sea_orm_active_enums::Mood},
     error::ReqErr,
 };
 use sea_orm::{
@@ -20,7 +20,8 @@ pub struct DiaryAddReq {
     pub title: String,
     pub content: Option<String>,
     pub temperature: Option<i8>,
-    pub weather: Option<Weather>,
+    pub weather: Option<u16>,
+    pub mood: Option<Mood>,
     pub tags: Vec<u32>,
     pub uid: u32,
     pub longtitude: Option<Decimal>,
@@ -37,6 +38,7 @@ pub async fn add(
         content: Set(diary_add_request.content),
         temperature: Set(diary_add_request.temperature),
         weather: Set(diary_add_request.weather),
+        mood: Set(diary_add_request.mood),
         uid: Set(diary_add_request.uid),
         longitude: Set(diary_add_request.longtitude),
         latitude: Set(diary_add_request.latitude),
@@ -143,7 +145,8 @@ pub struct DiaryDetailRes {
     pub title: String,
     pub content: Option<String>,
     pub temperature: Option<i8>,
-    pub weather: Option<Weather>,
+    pub weather: Option<u16>,
+    pub mood: Option<Mood>,
     pub date_create: DateTime,
     pub date_modify: DateTime,
     pub uid: u32,
@@ -161,6 +164,7 @@ impl DiaryDetailRes {
             content: diary.content,
             temperature: diary.temperature,
             weather: diary.weather,
+            mood: diary.mood,
             date_create: diary.date_create,
             date_modify: diary.date_modify,
             uid: diary.uid,
@@ -197,7 +201,8 @@ pub struct DiaryModifyReq {
     pub title: String,
     pub content: Option<String>,
     pub temperature: Option<i8>,
-    pub weather: Option<Weather>,
+    pub weather: Option<u16>,
+    pub mood: Option<Mood>,
     pub add_tags: Vec<u32>,
     pub rm_tags: Vec<u32>,
     pub longitude: Option<Decimal>,
@@ -218,6 +223,7 @@ pub async fn modify(
     diary.content = Set(diary_modify_request.content);
     diary.temperature = Set(diary_modify_request.temperature);
     diary.weather = Set(diary_modify_request.weather);
+    diary.mood = Set(diary_modify_request.mood);
     diary.longitude = Set(diary_modify_request.longitude);
     diary.latitude = Set(diary_modify_request.latitude);
     diary.date_modify = Set(Utc::now().naive_utc());

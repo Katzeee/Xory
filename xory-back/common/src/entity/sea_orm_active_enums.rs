@@ -4,10 +4,16 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]
-#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "weather")]
-pub enum Weather {
-    #[sea_orm(string_value = "sunny")]
-    Sunny,
-    #[sea_orm(string_value = "cloudy")]
-    Cloudy,
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "mood")]
+pub enum Mood {
+    #[sea_orm(string_value = "elated")]
+    Elated,
+    #[sea_orm(string_value = "content")]
+    Content,
+    #[sea_orm(string_value = "neutral")]
+    Neutral,
+    #[sea_orm(string_value = "displeased")]
+    Displeased,
+    #[sea_orm(string_value = "miserable")]
+    Miserable,
 }

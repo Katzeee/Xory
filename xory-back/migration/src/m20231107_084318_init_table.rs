@@ -53,6 +53,7 @@ enum Diary {
     Content,
     Temperature,
     Weather,
+    Mood,
     DateCreate,
     DateModify,
     Uid,
@@ -68,10 +69,13 @@ enum DiaryToDiaryTag {
 }
 
 #[derive(DeriveIden)]
-enum WeatherCategory {
+enum MoodTypes {
     Enum,
-    Sunny,
-    Cloudy,
+    Elated,
+    Content,
+    Neutral,
+    Displeased,
+    Miserable,
 }
 
 #[async_trait::async_trait]
@@ -216,14 +220,17 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Diary::Title).string().not_null())
                     .col(ColumnDef::new(Diary::Content).text().null())
                     .col(ColumnDef::new(Diary::Temperature).tiny_integer().null())
-                    .col(
-                        ColumnDef::new(Diary::Weather)
-                            .enumeration(
-                                WeatherCategory::Enum,
-                                [WeatherCategory::Sunny, WeatherCategory::Cloudy],
-                            )
-                            .default(WeatherCategory::Sunny.to_string()),
-                    )
+                    .col(ColumnDef::new(Diary::Mood).enumeration(
+                        MoodTypes::Enum,
+                        [
+                            MoodTypes::Elated,
+                            MoodTypes::Content,
+                            MoodTypes::Neutral,
+                            MoodTypes::Displeased,
+                            MoodTypes::Miserable,
+                        ],
+                    ))
+                    .col(ColumnDef::new(Diary::Weather).small_unsigned().default(0))
                     .col(
                         ColumnDef::new(Diary::DateCreate)
                             .date_time()

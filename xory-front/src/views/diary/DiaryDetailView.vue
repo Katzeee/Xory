@@ -13,7 +13,7 @@
     <div class="attributes-group">
       <attribute-item :name="t('diary.detail.tag')">
         <template v-slot:content>
-          <div class="attribute-content">{{ diary.category?.toString() }}</div>
+          <div class="attribute-content">{{ diary.tags?.toString() }}</div>
         </template>
       </attribute-item>
       <attribute-item :name="t('diary.detail.date')">
@@ -70,7 +70,7 @@ const onBack = () => {
 const diary = ref<DiaryDetailDisp>({})
 
 const requestDiaryDetail = async () => {
-  await diaryDetail({ id: +route.params.id }).then((data) => {
+  await diaryDetail({ did: Number(route.params.id) }).then((data) => {
     let { latitude, longitude } = data.value!
     diary.value = data.value!
     diary.value.showMap = latitude != undefined && longitude != undefined

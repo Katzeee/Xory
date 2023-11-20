@@ -18,7 +18,7 @@
             })
           }}
         </template>
-        <v-card v-if="!item.isHeader" @click="onDetail(item.id!)" class="diary-item">
+        <v-card v-if="!item.isHeader" @click="onDetail(item.did!)" class="diary-item">
           {{ item.title }}
         </v-card>
         <div v-else style="color: brown">
@@ -59,7 +59,7 @@ const requestDiaryList = async () => {
     page_number: 0,
     page_size: 0,
     keywords: '[]',
-    category: '[]'
+    tags: '[1,2,3,4,5]'
   }).then((data) => {
     diaries.value = data.value!.map((item) => {
       const { date: dateString, ..._ } = item

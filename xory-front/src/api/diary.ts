@@ -5,14 +5,14 @@ export interface DiaryListReq {
   page_number: number
   page_size: number
   keywords: string
-  category: string
+  tags: string
 }
 
 export interface DiaryListRes {
-  title?: string | undefined
+  title?: string
   content?: string
-  id?: number
-  category?: number
+  did?: number
+  tags?: number[]
   date?: Date | string
 }
 
@@ -23,17 +23,17 @@ export const diaryList = async (diaryListReq: DiaryListReq) => {
 }
 
 export interface DiaryDetailReq {
-  id: number
+  did: number
 }
 
 export interface DiaryDetailRes {
-  id?: number
+  did?: number
   date?: Date
   title?: string
   content?: string
   temperature?: number
   weather?: string
-  category?: number
+  tags?: number[] | string
   date_create?: Date
   date_modify?: Date
   uid?: number
