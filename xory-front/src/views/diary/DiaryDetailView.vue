@@ -1,57 +1,65 @@
 <template>
   <v-container class="column-root-container">
-    <v-app-bar :elevation="2">
-      <v-btn @click="onBack">Back</v-btn>
+    <v-app-bar color="primary" density="compact">
+      <template v-slot:prepend>
+        <v-icon icon="mdi-arrow-left" @click="onBack"></v-icon>
+      </template>
     </v-app-bar>
-    <v-textarea
-      rows="1"
-      auto-grow
-      v-model="diary.title"
-      variant="underlined"
-      class="title"
-      hide-details="auto"
-    ></v-textarea>
-    <div class="attributes-group">
-      <attribute-item :name="t('diary.detail.tag')">
-        <template v-slot:content>
-          <div class="attribute-content">{{ diary.tags?.toString() }}</div>
-        </template>
-      </attribute-item>
-      <attribute-item :name="t('diary.detail.date')">
-        <template v-slot:content>
-          <div class="attribute-content">{{ diary.date?.toString() }}</div>
-        </template>
-      </attribute-item>
-      <attribute-item :name="t('diary.detail.weather')">
-        <template v-slot:content>
-          <div class="attribute-content">{{ diary.weather?.toString() }}</div>
-        </template>
-      </attribute-item>
-      <attribute-item :name="t('diary.detail.mood')">
-        <template v-slot:content>
-          <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
-        </template>
-      </attribute-item>
-    </div>
-    <v-divider></v-divider>
-    <div class="content-group">
-      <div class="diary-content">
-        {{ diary.content }}
+    <v-main>
+      <v-textarea
+        rows="1"
+        auto-grow
+        v-model="diary.title"
+        variant="underlined"
+        class="title"
+        hide-details="auto"
+      ></v-textarea>
+      <div class="attributes-group">
+        <attribute-item :name="t('diary.detail.tag')">
+          <template v-slot:content>
+            <div class="attribute-content">{{ diary.tags?.toString() }}</div>
+          </template>
+        </attribute-item>
+        <attribute-item :name="t('diary.detail.date')">
+          <template v-slot:content>
+            <div class="attribute-content">{{ diary.date?.toString() }}</div>
+          </template>
+        </attribute-item>
+        <attribute-item :name="t('diary.detail.weather')">
+          <template v-slot:content>
+            <div class="attribute-content">{{ diary.weather?.toString() }}</div>
+          </template>
+        </attribute-item>
+        <attribute-item :name="t('diary.detail.mood')">
+          <template v-slot:content>
+            <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
+          </template>
+        </attribute-item>
       </div>
-      <div class="create-modify-time" @click="createModifyFlag = !createModifyFlag">
-        {{
-          createModifyFlag
-            ? t('diary.detail.created') + diary.date_create
-            : t('diary.detail.modified') + diary.date_modify
-        }}
+      <v-divider></v-divider>
+      <div class="content-group">
+        <v-textarea
+          rows="1"
+          auto-grow
+          v-model="diary.content"
+          variant="plain"
+          class="diary-content"
+          density="comfortable"
+          hide-details="auto"
+        ></v-textarea>
+        <div class="create-modify-time" @click="createModifyFlag = !createModifyFlag">
+          <span v-if="createModifyFlag" class="label">{{ t('diary.detail.created') }}</span>
+          <span v-else class="label">{{ t('diary.detail.modified') }}</span>
+          <span v-if="createModifyFlag">{{ diary.date_create }}</span>
+          <span v-else>{{ diary.date_modify }}</span>
+        </div>
       </div>
-    </div>
 
-    <div class="map-container" v-if="diary.showMap">
-      <el-amap ref="mapRef" :center="center" :zoom="zoom" @init="init" />
-    </div>
-    <div v-else>No map info.</div>
-    <!-- <pre style="white-space: pre-wrap">{{ JSON.stringify(diary, null, 2) }}</pre> -->
+      <div class="map-container" v-if="diary.showMap">
+        <el-amap ref="mapRef" :center="center" :zoom="zoom" @init="init" />
+      </div>
+      <div v-else>No map info.</div>
+    </v-main>
   </v-container>
 </template>
 
@@ -103,21 +111,17 @@ const init = (map: any) => {
 .title {
   flex: 0 1 auto;
   justify-self: flex-start;
+  margin-bottom: 12px;
   :deep(textarea) {
     font-size: 30px;
-    padding: 6px;
   }
   :deep(.v-field__outline)::before {
     display: none;
   }
 }
 
-button {
-  margin-bottom: 20px;
-}
-
 .v-divider {
-  margin: 20px 0px;
+  margin-top: 20px;
 }
 .map-container {
   flex: 1;
@@ -140,9 +144,11 @@ pre {
 .content-group {
   display: flex;
   flex-direction: column;
+  padding: 0px 10px 10px 10px;
   .diary-content {
     font-size: 18px;
-    line-height: 1.6;
+    line-height: 3;
+    height: auto;
     color: #333;
     margin: 10px 0;
   }
@@ -150,6 +156,12 @@ pre {
   .create-modify-time {
     align-self: flex-end;
     padding: 0px 10px 10px 0px;
+    .label {
+      color: rgba(var(--v-border-color), var(--v-disabled-opacity));
+    }
+    &:hover {
+      cursor: default;
+    }
   }
 }
 </style>
