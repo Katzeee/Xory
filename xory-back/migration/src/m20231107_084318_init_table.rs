@@ -196,6 +196,7 @@ impl MigrationTrait for Migration {
             .get_connection()
             .execute_unprepared(
                 r#"
+                INSERT INTO `diary_tag` VALUES (null, 'uncategorized'); 
                 INSERT INTO `diary_tag` VALUES (null, 'study');
                 INSERT INTO `diary_tag` VALUES (null, 'work');
                 INSERT INTO `diary_tag` VALUES (null, 'entertainment');
