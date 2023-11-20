@@ -10,7 +10,7 @@
       <v-card></v-card>
     </div> -->
     <v-timeline side="end" class="diary-list-group">
-      <v-timeline-item size="small" v-for="(item, index) in diaries" :key="index">
+      <v-timeline-item size="x-small" dot-color="blue-darken-4" v-for="(item, index) in diaries" :key="index">
         <template v-if="!item.isHeader && item.showDate" v-slot:opposite>
           {{
             (item.date as Date).toLocaleDateString(appStore.app.lang, {
@@ -59,8 +59,9 @@ const requestDiaryList = async () => {
     page_number: 0,
     page_size: 0,
     keywords: '[]',
-    tags: '[1,2,3,4,5]'
+    tags: '[]'
   }).then((data) => {
+    console.log(data.value?.length)
     diaries.value = data.value!.map((item) => {
       const { date: dateString, ..._ } = item
       const date = new Date(dateString as string)
@@ -123,13 +124,15 @@ const onDetail = (id: number) => {
   flex: 1;
 }
 
+.v-timeline {
+  grid-auto-rows: min-content;
+}
+
 .diary-list-group {
   margin-bottom: 12px;
   overflow-y: scroll;
   :deep(.v-timeline-item__body) {
     justify-self: auto !important;
-    padding: 10px;
-    margin: 10px;
     overflow: hidden;
   }
   .diary-item {

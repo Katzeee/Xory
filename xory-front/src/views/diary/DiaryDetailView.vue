@@ -8,6 +8,7 @@
       v-model="diary.title"
       variant="underlined"
       class="title"
+      hide-details="auto"
     ></v-textarea>
     <!-- </div> -->
     <div class="attributes-group">
@@ -26,15 +27,23 @@
           <div class="attribute-content">{{ diary.weather?.toString() }}</div>
         </template>
       </attribute-item>
-      <div>{{ 0 }}</div>
+      <attribute-item :name="t('diary.detail.mood')">
+        <template v-slot:content>
+          <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
+        </template>
+      </attribute-item>
     </div>
     <v-divider></v-divider>
-    <div>
-      <div>
+    <div class="content-group">
+      <div class="diary-content">
         {{ diary.content }}
       </div>
-      <div>
-        {{ diary.date_modify }}
+      <div class="create-modify-time" @click="createModifyFlag = !createModifyFlag">
+        {{
+          createModifyFlag
+            ? t('diary.detail.created') + diary.date_create
+            : t('diary.detail.modified') + diary.date_modify
+        }}
       </div>
     </div>
 
@@ -67,8 +76,8 @@ const onBack = () => {
   router.go(-1)
 }
 
+const createModifyFlag = ref(true)
 const diary = ref<DiaryDetailDisp>({})
-
 const requestDiaryDetail = async () => {
   await diaryDetail({ did: Number(route.params.id) }).then((data) => {
     let { latitude, longitude } = data.value!
@@ -102,6 +111,7 @@ const init = (map: any) => {
     display: none;
   }
 }
+
 button {
   margin-bottom: 20px;
 }
@@ -111,7 +121,7 @@ button {
 }
 .map-container {
   flex: 1;
-  max-height: 300px;
+  max-height: 200px;
   min-height: 100px;
 }
 
@@ -124,6 +134,22 @@ pre {
   padding: 8px;
   &:hover {
     background: rgba(55, 53, 47, 0.08);
+  }
+}
+
+.content-group {
+  display: flex;
+  flex-direction: column;
+  .diary-content {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+    margin: 10px 0;
+  }
+
+  .create-modify-time {
+    align-self: flex-end;
+    padding: 0px 10px 10px 0px;
   }
 }
 </style>

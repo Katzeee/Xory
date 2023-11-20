@@ -33,6 +33,7 @@ export interface DiaryDetailRes {
   content?: string
   temperature?: number
   weather?: string
+  mood?: string
   tags?: number[] | string
   date_create?: Date
   date_modify?: Date

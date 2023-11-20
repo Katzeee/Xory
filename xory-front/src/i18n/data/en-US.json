@@ -19,7 +19,9 @@
       "tag": "Tag",
       "date": "Date",
       "weather": "Weather",
-      "mood": "Mood"
+      "mood": "Mood",
+      "created": "Created at ",
+      "modified": "Last modified at "
     }
   }
 }
