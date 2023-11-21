@@ -27,7 +27,7 @@ const props = defineProps({
   display: flex;
   .left {
     flex: 0 1;
-    height: 24px;
+    // height: 24px;
     min-width: 80px;
     color: var(--vt-c-text-light-2);
     padding: 8px;

@@ -6,9 +6,15 @@ export interface LoginReq {
   password: string
 }
 
+export interface DiaryTag {
+  name: string
+  tid: number
+}
+
 export interface LoginRes {
   token: string
   uid: number
+  tags: DiaryTag[]
 }
 
 export const login = async (loginReq: LoginReq) => {

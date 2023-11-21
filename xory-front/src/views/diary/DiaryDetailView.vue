@@ -19,22 +19,55 @@
       <div class="attributes-group">
         <attribute-item :name="t('diary.detail.tag')">
           <template v-slot:content>
-            <div class="attribute-content">{{ diary.tags?.toString() }}</div>
+            <div class="attribute-group">
+              <div class="attribute-content">
+                {{ diary.tags?.toString() }}
+              </div>
+              <v-overlay
+                v-model="active"
+                scroll-strategy="close"
+                contained
+                location="bottom"
+                origin="auto"
+                activator="parent"
+                location-strategy="connected"
+              >
+                <v-card class="attribute-card">
+                  <v-chip-group selected-class="text-primary" column multiple v-model="diary.tags">
+                    <v-chip v-for="(tag, id) in userStore.userInfo.tags" :key="id" label>{{
+                      tag.name
+                    }}</v-chip>
+                  </v-chip-group>
+                </v-card>
+              </v-overlay>
+            </div>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.date')">
           <template v-slot:content>
-            <div class="attribute-content">{{ diary.date }}</div>
+            <div class="attribute-group">
+              <div class="attribute-content">{{ diary.date }}</div>
+            </div>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.weather')">
           <template v-slot:content>
-            <div class="attribute-content">{{ diary.weather?.toString() }}</div>
+            <div class="attribute-group" @click="console.log(diary.tags)">
+              <div class="attribute-content">{{ diary.weather?.toString() }}</div>
+            </div>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.mood')">
           <template v-slot:content>
-            <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
+            <div class="attribute-group">
+              <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
+              <v-card class="attribute-card">
+                <v-chip class="ma-2" color="pink" label>
+                  <v-icon start icon="mdi-label"></v-icon>
+                  Tags
+                </v-chip></v-card
+              >
+            </div>
           </template>
         </attribute-item>
       </div>
@@ -73,16 +106,20 @@ import type { MessageSchema } from '@/i18n'
 import { useI18n } from 'vue-i18n'
 import AttributeItem from './AttributeItem.vue'
 import { useAppStore } from '@/stores/app'
+import { useUserStore } from '@/stores/user'
+import { computed } from 'vue'
 declare let AMap: any
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
 const appStore = useAppStore()
+const userStore = useUserStore()
 
 interface DiaryDetailDisp extends DiaryDetailRes {
   showMap?: boolean
 }
 
+const active = ref(false)
 const onBack = () => {
   router.go(-1)
 }
@@ -151,11 +188,18 @@ pre {
   flex-grow: 1;
 }
 
-.attribute-content {
+.attribute-group {
   flex: 1 0;
-  padding: 8px;
-  &:hover {
-    background: rgba(55, 53, 47, 0.08);
+  position: relative;
+  // min-height: 42px;
+  .attribute-content {
+    padding: 8px;
+    &:hover {
+      background: rgba(55, 53, 47, 0.08);
+    }
+  }
+  .attribute-card {
+    padding: 10px;
   }
 }
 
