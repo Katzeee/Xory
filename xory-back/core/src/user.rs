@@ -1,10 +1,14 @@
 use anyhow::Result;
 use bcrypt::{hash, verify, DEFAULT_COST};
-use common::{entity::user, error::ReqErr};
+use common::{
+    entity::{diary_tag, user, user_to_diary_tag},
+    error::ReqErr,
+};
 use middleware_fn::auth::{create_token, Claims};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use sea_orm::{
-    ActiveModelTrait, ActiveValue::Set, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter,
+    ActiveModelTrait, ActiveValue::Set, ColumnTrait, DatabaseConnection, EntityTrait, ModelTrait,
+    QueryFilter,
 };
 use serde::{Deserialize, Serialize};
 
@@ -57,6 +61,7 @@ pub struct UserLoginReq {
 pub struct UserLoginRes {
     pub token: String,
     pub uid: u32,
+    pub tags: Vec<diary_tag::Model>,
 }
 
 pub async fn login(
@@ -80,9 +85,20 @@ pub async fn login(
                 ..Default::default()
             };
             let token = create_token(claims).await;
+            // user.find_related(di)
+            let tags = user_to_diary_tag::Entity::find()
+                .filter(user_to_diary_tag::Column::Uid.eq(user.uid))
+                .find_also_related(diary_tag::Entity)
+                .all(db)
+                .await?;
+            let tags = tags
+                .into_iter()
+                .map(|(_, diary_tag)| diary_tag.unwrap())
+                .collect();
             Ok(UserLoginRes {
                 token: token,
                 uid: user.uid,
+                tags: tags,
             })
         }
         None => Err(ReqErr::LoginError.into()),
