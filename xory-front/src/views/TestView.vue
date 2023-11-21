@@ -1,8 +1,11 @@
 <template>
-  <div>
-    <v-btn color="success" class="mt-12" @click="overlay = !overlay"> Show Overlay </v-btn>
+  <div class="column-root-container">
+    <v-btn id="here" color="success" class="mt-12"> Show Overlay </v-btn>
 
-    <div v-if="overlay" class="popup"></div>
+    <v-overlay activator="#here" location-strategy="connected">
+      <div class="popup"></div>
+      <!-- <v-card variant="flat"> 123123 </v-card> -->
+    </v-overlay>
   </div>
 
   <!-- <div class="column-root-container">
@@ -12,11 +15,7 @@
   </div> -->
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-
-const overlay = ref(true)
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss">
 .v-overlay {

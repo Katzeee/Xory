@@ -2,7 +2,7 @@
   <v-container class="column-root-container">
     <v-app-bar color="primary" density="compact">
       <template v-slot:prepend>
-        <v-btn icon @click="onBack">
+        <v-btn icon @click="router.go(-1)">
           <v-icon icon="mdi-arrow-left"></v-icon>
         </v-btn>
       </template>
@@ -19,55 +19,38 @@
       <div class="attributes-group">
         <attribute-item :name="t('diary.detail.tag')">
           <template v-slot:content>
-            <div class="attribute-group">
-              <div class="attribute-content">
-                {{ diary.tags?.toString() }}
-              </div>
-              <v-overlay
-                v-model="active"
-                scroll-strategy="close"
-                contained
-                location="bottom"
-                origin="auto"
-                activator="parent"
-                location-strategy="connected"
-              >
-                <v-card class="attribute-card">
-                  <v-chip-group selected-class="text-primary" column multiple v-model="diary.tags">
-                    <v-chip v-for="(tag, id) in userStore.userInfo.tags" :key="id" label>{{
-                      tag.name
-                    }}</v-chip>
-                  </v-chip-group>
-                </v-card>
-              </v-overlay>
+            <div class="attribute-content">
+              {{ diary.tags?.toString() }}
             </div>
+          </template>
+          <template v-slot:overlay>
+            <v-chip-group selected-class="text-primary" multiple v-model="diary.tags">
+              <v-chip v-for="(tag, id) in userStore.userInfo.tags" :key="id" label>
+                {{ tag.name }}
+              </v-chip>
+            </v-chip-group>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.date')">
           <template v-slot:content>
-            <div class="attribute-group">
-              <div class="attribute-content">{{ diary.date }}</div>
-            </div>
+            <div class="attribute-content">{{ diary.date }}</div>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.weather')">
           <template v-slot:content>
-            <div class="attribute-group" @click="console.log(diary.tags)">
-              <div class="attribute-content">{{ diary.weather?.toString() }}</div>
-            </div>
+            <div class="attribute-content">{{ diary.weather?.toString() }}</div>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.mood')">
           <template v-slot:content>
-            <div class="attribute-group">
-              <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
-              <v-card class="attribute-card">
-                <v-chip class="ma-2" color="pink" label>
-                  <v-icon start icon="mdi-label"></v-icon>
-                  Tags
-                </v-chip></v-card
-              >
-            </div>
+            <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
+          </template>
+          <template v-slot:overlay>
+            <v-chip-group selected-class="text-primary" multiple v-model="diary.tags">
+              <v-chip v-for="(tag, id) in userStore.userInfo.tags" :key="id" label>
+                {{ tag.name }}
+              </v-chip>
+            </v-chip-group>
           </template>
         </attribute-item>
       </div>
@@ -108,6 +91,7 @@ import AttributeItem from './AttributeItem.vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
 import { computed } from 'vue'
+import { watch } from 'vue'
 declare let AMap: any
 const route = useRoute()
 const router = useRouter()
@@ -117,11 +101,6 @@ const userStore = useUserStore()
 
 interface DiaryDetailDisp extends DiaryDetailRes {
   showMap?: boolean
-}
-
-const active = ref(false)
-const onBack = () => {
-  router.go(-1)
 }
 
 const createModifyFlag = ref(true)
@@ -148,8 +127,22 @@ const requestDiaryDetail = async () => {
     diary.value.showMap = latitude != undefined && longitude != undefined
   })
 }
-
 requestDiaryDetail()
+watch(
+  () => diary.value.tags as number[],
+  (newValue, oldValue) => {
+    if (newValue.length === 0) {
+      ;(diary.value.tags as number[]).push(0)
+      return
+    }
+    if (newValue.length > 1) {
+      const index = (diary.value.tags as number[]).indexOf(0)
+      if (index !== -1) {
+        ;(diary.value.tags as number[]).splice(index, 1)
+      }
+    }
+  }
+)
 
 const zoom = ref(4)
 let center = ref([0, 0])
@@ -188,18 +181,12 @@ pre {
   flex-grow: 1;
 }
 
-.attribute-group {
-  flex: 1 0;
-  position: relative;
-  // min-height: 42px;
-  .attribute-content {
-    padding: 8px;
-    &:hover {
-      background: rgba(55, 53, 47, 0.08);
-    }
-  }
-  .attribute-card {
-    padding: 10px;
+.attribute-content {
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  &:hover {
+    background: rgba(55, 53, 47, 0.08);
   }
 }
 
