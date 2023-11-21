@@ -12,6 +12,7 @@
         location-strategy="connected"
         scrim="transparent"
         :max-width="rightWidth - 2"
+        :close-on-content-click="closeOnContentClick"
       >
         <v-card elevation="10">
           <slot name="overlay"></slot>
@@ -29,6 +30,14 @@ const props = defineProps({
   name: {
     type: String,
     required: true as const
+  },
+  closeOnContentClick: {
+    type: Boolean,
+    default: false
+  },
+  closeOnDelay: {
+    type: [String, Number],
+    default: undefined
   }
 })
 const rightRef = ref<HTMLElement | null>(null)

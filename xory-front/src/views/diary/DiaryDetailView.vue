@@ -17,6 +17,11 @@
         hide-details="auto"
       ></v-textarea>
       <div class="attributes-group">
+        <attribute-item :name="t('diary.detail.date')">
+          <template v-slot:content>
+            <div class="attribute-content">{{ diary.date }}</div>
+          </template>
+        </attribute-item>
         <attribute-item :name="t('diary.detail.tag')">
           <template v-slot:content>
             <div class="attribute-content">
@@ -31,24 +36,22 @@
             </v-chip-group>
           </template>
         </attribute-item>
-        <attribute-item :name="t('diary.detail.date')">
-          <template v-slot:content>
-            <div class="attribute-content">{{ diary.date }}</div>
-          </template>
-        </attribute-item>
         <attribute-item :name="t('diary.detail.weather')">
           <template v-slot:content>
             <div class="attribute-content">{{ diary.weather?.toString() }}</div>
           </template>
         </attribute-item>
-        <attribute-item :name="t('diary.detail.mood')">
+        <attribute-item :name="t('diary.detail.mood')" :close-on-content-click="true">
           <template v-slot:content>
-            <div class="attribute-content">{{ diary.mood != null ? diary.mood : 'Unknown' }}</div>
+            <div class="attribute-content">
+              {{ moodIndex != null ? moods[moodIndex]['name'] : 'Empty' }}
+            </div>
           </template>
           <template v-slot:overlay>
-            <v-chip-group selected-class="text-primary" multiple v-model="diary.tags">
-              <v-chip v-for="(tag, id) in userStore.userInfo.tags" :key="id" label>
-                {{ tag.name }}
+            <v-chip-group class="text-center" v-model="moodIndex" selected-class="text-primary">
+              <v-chip v-for="(mood, id) in moods" :key="id" label>
+                <v-icon :color="mood['color']" start :icon="mood['icon']"></v-icon>
+                {{ mood['name'] }}
               </v-chip>
             </v-chip-group>
           </template>
@@ -98,10 +101,18 @@ const router = useRouter()
 const { t } = useI18n<{ message: MessageSchema }>({ useScope: 'global' })
 const appStore = useAppStore()
 const userStore = useUserStore()
-
 interface DiaryDetailDisp extends DiaryDetailRes {
   showMap?: boolean
 }
+
+const moods = [
+  { name: 'elated', icon: 'mdi-emoticon-cool', color: 'green-lighten-2' },
+  { name: 'content', icon: 'mdi-emoticon-happy-outline', color: 'light-blue-lighten-2' },
+  { name: 'neutral', icon: 'mdi-emoticon-neutral', color: 'blue-grey-lighten-2' },
+  { name: 'displeased', icon: 'mdi-emoticon-cry', color: 'yellow-darken-3' },
+  { name: 'miserable', icon: 'mdi-emoticon-dead', color: 'red-lighten-2' }
+]
+const moodIndex = ref<number | null>(null)
 
 const createModifyFlag = ref(true)
 const diary = ref<DiaryDetailDisp>({})
@@ -185,6 +196,7 @@ pre {
   display: flex;
   padding: 8px;
   align-items: center;
+  margin-right: 20px;
   &:hover {
     background: rgba(55, 53, 47, 0.08);
   }
