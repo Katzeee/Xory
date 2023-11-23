@@ -21,6 +21,9 @@
           <template v-slot:content>
             <div class="attribute-content">{{ diary.date }}</div>
           </template>
+          <template v-slot:overlay>
+            <v-date-picker hide-header></v-date-picker>
+          </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.tag')">
           <template v-slot:content>
@@ -109,7 +112,7 @@ const moods = [
   { name: 'elated', icon: 'mdi-emoticon-cool', color: 'green-lighten-2' },
   { name: 'content', icon: 'mdi-emoticon-happy-outline', color: 'light-blue-lighten-2' },
   { name: 'neutral', icon: 'mdi-emoticon-neutral', color: 'blue-grey-lighten-2' },
-  { name: 'displeased', icon: 'mdi-emoticon-cry', color: 'yellow-darken-3' },
+  { name: 'displeased', icon: 'mdi-emoticon-cry-outline', color: 'yellow-darken-3' },
   { name: 'miserable', icon: 'mdi-emoticon-dead', color: 'red-lighten-2' }
 ]
 const moodIndex = ref<number | null>(null)
@@ -186,6 +189,31 @@ const init = (map: any) => {
   flex: 1;
   max-height: 200px;
   min-height: 100px;
+}
+
+.v-date-picker {
+  width: auto;
+  :deep(.v-date-picker-month) {
+    justify-content: flex-start;
+  }
+  :deep(.v-date-picker-controls) {
+    justify-content: flex-start;
+    .v-spacer {
+      flex: 0 1;
+    }
+  }
+  :deep(.v-date-picker-month__days) {
+    // grid-template-columns: repeat(7, 25px) !important;
+    // grid-template-rows: repeat(6, 25px) !important;
+    flex: 0 1 0 !important;
+  }
+  :deep(.v-date-picker-month__day) {
+    width: 37px !important;
+    height: 25px !important;
+    button {
+      --v-btn-height: 14px !important;
+    }
+  }
 }
 
 pre {
