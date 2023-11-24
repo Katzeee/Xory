@@ -22,7 +22,7 @@
             <div class="attribute-content">{{ diary.date }}</div>
           </template>
           <template v-slot:overlay>
-            <v-date-picker hide-header></v-date-picker>
+            <v-date-picker v-model="dateRef" hide-header show-adjacent-months></v-date-picker>
           </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.tag')">
@@ -108,6 +108,8 @@ interface DiaryDetailDisp extends DiaryDetailRes {
   showMap?: boolean
 }
 
+const dateRef = ref(new Date('2022-11-01'))
+
 const moods = [
   { name: 'elated', icon: 'mdi-emoticon-cool', color: 'green-lighten-2' },
   { name: 'content', icon: 'mdi-emoticon-happy-outline', color: 'light-blue-lighten-2' },
@@ -124,6 +126,7 @@ const requestDiaryDetail = async () => {
     let { latitude, longitude, date, date_create, date_modify } = data.value!
     diary.value = data.value!
     diary.value.date = new Date(date as string)
+    dateRef.value = diary.value.date
     diary.value.date_create = new Date(date_create as string).toLocaleString(appStore.app.lang, {
       year: 'numeric',
       month: 'short',
@@ -193,11 +196,17 @@ const init = (map: any) => {
 
 .v-date-picker {
   width: auto;
-  :deep(.v-date-picker-month) {
-    justify-content: flex-start;
+  :deep(.v-date-picker-years__content) {
+    padding-inline: 0;
   }
   :deep(.v-date-picker-controls) {
-    justify-content: flex-start;
+    padding: 0;
+  }
+  :deep(.v-date-picker-month) {
+    min-width: 270px;
+    padding: 0 0 12px;
+  }
+  :deep(.v-date-picker-controls) {
     .v-spacer {
       flex: 0 1;
     }
@@ -208,10 +217,12 @@ const init = (map: any) => {
     flex: 0 1 0 !important;
   }
   :deep(.v-date-picker-month__day) {
-    width: 37px !important;
-    height: 25px !important;
+    width: 38px !important;
+    height: 35px !important;
     button {
       --v-btn-height: 14px !important;
+      width: calc(var(--v-btn-height) + 13px);
+      height: calc(var(--v-btn-height) + 13px);
     }
   }
 }
