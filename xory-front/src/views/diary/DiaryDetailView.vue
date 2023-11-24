@@ -43,6 +43,13 @@
           <template v-slot:content>
             <div class="attribute-content">{{ diary.weather?.toString() }}</div>
           </template>
+          <template v-slot:overlay>
+            <div class="time-picker">
+              <v-btn icon="mdi-chevron-up" variant="plain" size="small" flat></v-btn>
+              <div>12</div>
+              <v-btn icon="mdi-chevron-down" variant="plain" size="small" flat></v-btn>
+            </div>
+          </template>
         </attribute-item>
         <attribute-item :name="t('diary.detail.mood')" :close-on-content-click="true">
           <template v-slot:content>
@@ -263,5 +270,10 @@ pre {
       cursor: default;
     }
   }
+}
+
+.time-picker {
+  display: flex;
+  flex-direction: column;
 }
 </style>
